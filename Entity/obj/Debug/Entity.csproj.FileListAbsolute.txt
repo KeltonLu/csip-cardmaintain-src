@@ -1,0 +1,12 @@
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\CSIPCardMaintain.Entity.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\CSIPCardMaintain.Entity.pdb
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\Framework.Data.OM.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\Framework.Common.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\ldapapi.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\CSIPCommonModel.BaseItem.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\bin\Debug\nunit.framework.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\obj\Debug\Entity.csproj.CoreCompileInputs.cache
+D:\中信專案檔\csip-cardmaintain-src\Entity\obj\Debug\Entity.csproj.CopyComplete
+D:\中信專案檔\csip-cardmaintain-src\Entity\obj\Debug\CSIPCardMaintain.Entity.dll
+D:\中信專案檔\csip-cardmaintain-src\Entity\obj\Debug\CSIPCardMaintain.Entity.pdb
+D:\中信專案檔\csip-cardmaintain-src\Entity\obj\Debug\Entity.csprojAssemblyReference.cache

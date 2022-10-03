@@ -1,0 +1,2729 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Framework.WebControls</name>
+    </assembly>
+    <members>
+        <member name="T:Framework.WebControls.OnAjaxValidatorDelegate">
+            <summary>
+            委托驗證
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="T:Framework.WebControls.AjaxValidator">
+            <summary>
+            AJAX驗證控制項
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.AjaxValidator.#ctor">
+            <summary>
+            建構
+            </summary>
+        </member>
+        <member name="E:Framework.WebControls.AjaxValidator.OnAjaxValidatorQuest">
+            <summary>
+            請求驗證事件
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.AjaxValidator.OnInit(System.EventArgs)">
+            <summary>
+            初始化重寫
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.AjaxValidator.OnLoad(System.EventArgs)">
+            <summary>
+            加載重寫
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.AjaxValidator.QueryInfo">
+            <summary>
+            請求的條件信息
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.AjaxValidator.queryInfo">
+            <summary>
+            請求的條件信息
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.AjaxValidator.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            繪製重寫
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.AjaxValidatorEventArgs">
+            <summary>
+            AJAX驗證控制項事件參數
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.AjaxValidatorEventArgs.#ctor(System.String)">
+            <summary>
+            初始化
+            </summary>
+            <param name="_queryData"></param>
+        </member>
+        <member name="P:Framework.WebControls.AjaxValidatorEventArgs.IsAllowSubmit">
+            <summary>
+            (屬性)取得或設置 是否允許提交
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.AjaxValidatorEventArgs.Info">
+            <summary>
+            (屬性)取得或設置 Info
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.AjaxValidatorEventArgs.QueryData">
+            <summary>
+            (屬性)取得或設置 QueryData
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.AjaxValidatorEventArgs.QueryInfo">
+            <summary>
+            (屬性)取得或設置 QueryInfo
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.DatePicker">
+            <summary>
+            Summary description for DatePicker.
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.Enable">
+            <summary>
+            获取或者设置控件的可用性
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.DatePicker.Focus">
+            <summary>
+            設置輸入框的焦點
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.Width">
+            <summary>
+            获取或者设置控件輸入框的寬度
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.MaxLength">
+            <summary>
+            获取或者设置控件輸入框的最打輸入長度
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.Text">
+            <summary>
+            Text
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.CssClass">
+            <summary>
+            CSS樣式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgClose">
+            <summary>
+            imgClose
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgDivider">
+            <summary>
+            imgDivider
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgDrop1">
+            <summary>
+            imgDrop1
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgDrop2">
+            <summary>
+            imgDrop2
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgLeft1">
+            <summary>
+            imgLeft1
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgLeft2">
+            <summary>
+            imgLeft2
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgRight1">
+            <summary>
+            imgRight1
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.imgDirectory">
+            <summary>
+            imgDirectory
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.ControlCssClass">
+            <summary>
+            ControlCssClass
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.DateType">
+            <summary>
+            DateType
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.IsRequired">
+            <summary>
+            是否必填
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.DatePicker.ValidateName">
+            <summary>
+            验证的名称，用于验证失败提示
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.DatePicker.#ctor">
+            <summary>
+            建構程式
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.DatePicker.placeJavascript">
+            <summary>
+            javascript
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.DatePicker.CreateChildControls">
+            <summary>
+            重寫派生子元件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustAdRotator">
+            <summary>
+            自定義CustAdRotator元件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustButton">
+            <summary>
+            自定義Button元件;
+            <see cref="T:System.Web.UI.WebControls.Button"/>
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustButton.DisabledWhenSubmit">
+            <summary>
+            當點擊按鈕後是否把按鈕置為不可用，默認為false
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustButton.SubmitText">
+            <summary>
+            當點擊按鈕後的文本內容，默認為空（不改變文本內容）
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustButton.ConfirmMsg">
+            <summary>
+            當點擊按鈕後出現的提示確認信息，默認為空（不提示信息）
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustButton.ShowID">
+            <summary>
+            文字顯示XML的ID
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustButton.CheckSaved">
+            <summary>
+            當點擊按鈕後是否檢查當前頁面是否已保存，默認為true（檢查）
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustButton.CheckSavedMsg">
+            <summary>
+            CheckSaved為true顯示的confirm提示信息，如果不設置或為空，則顯示Page的提示信息
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustButton.AddAttributesToRender(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重寫<see cref="M:System.Web.UI.WebControls.Button.AddAttributesToRender(System.Web.UI.HtmlTextWriter)"/>
+            添加onclick腳本，實現點擊後的相關處理
+            修改紀錄：調整confirm語法 by Ares Stanley 20220225
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+        </member>
+        <member name="M:Framework.WebControls.CustButton.EnsureEndWithSemiColon(System.String)">
+            <summary>
+            靜態方法，確保加入的js腳本以;結尾
+            </summary>
+            <param name="value">js腳本字符串</param>
+            <returns>處理後的js腳本字符串</returns>
+        </member>
+        <member name="T:Framework.WebControls.CustCalendar">
+            <summary>
+            自定義Calendar元件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustCheckBox">
+            <summary>
+            自定義CheckBox元件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustCheckBoxList">
+            <summary>
+            功能：擴展CheckBoxList控件.包含最多選擇多少,最少選擇多少的屬性
+            <see cref="T:System.Web.UI.WebControls.CheckBoxList"/>
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustCheckBoxList.MsgEmpty">
+            <summary>
+            非空驗證信息
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustCheckBoxList.MsgMinNum">
+            <summary>
+            最少選擇多少個的驗證信息
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustCheckBoxList.MsgMaxNum">
+            <summary>
+            最多選擇多少個的驗證信息
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustCheckBoxList.ClientValidationFunctionName">
+            <summary>
+            非空驗證的js腳本方法名
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.ValName">
+            <summary>
+            驗證名
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.ValDisplay">
+            <summary>
+            錯誤消息顯示方式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.IsValEmpty">
+            <summary>
+            是否非空驗證
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.ValEmptyMsg">
+            <summary>
+            自定義非空驗證消息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.MinNum">
+            <summary>
+            必須選擇的最小個數
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.MaxNum">
+            <summary>
+            必須選擇的最大個數
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustCheckBoxList.EnumType">
+            <summary>
+            Cust Property
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.OnInit(System.EventArgs)">
+            <summary>
+            重寫<see cref="M:System.Web.UI.WebControls.BaseDataBoundControl.OnInit(System.EventArgs)"/>EnsureChildControls
+            調用<see cref="M:System.Web.UI.Control.EnsureChildControls"/>方法確保子控件被創建
+            </summary>
+            <param name="e"><see cref="T:System.EventArgs"/></param>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.CreateChildControls">
+            <summary>
+            重寫<see cref="M:System.Web.UI.Control.CreateChildControls"/>
+            如果設置<see cref="P:Framework.WebControls.CustCheckBoxList.IsValEmpty"/>屬性為true，則添加驗證控件
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.ctrValEmpty_ServerValidate(System.Object,System.Web.UI.WebControls.ServerValidateEventArgs)">
+            <summary>
+            驗證控件服務器端驗證邏輯
+            </summary>
+            <param name="source"></param>
+            <param name="args"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重寫<see cref="M:System.Web.UI.WebControls.CheckBoxList.Render(System.Web.UI.HtmlTextWriter)"/>
+            如果設置<see cref="P:Framework.WebControls.CustCheckBoxList.IsValEmpty"/>屬性為true，則輸出驗證控件
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.GetValEmpScript">
+            <summary>
+            獲取驗證腳本
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.SelectByValue(System.Object)">
+            <summary>
+            根據Value來選擇
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustCheckBoxList.SelectByText(System.String)">
+            <summary>
+            根據text來選擇
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:Framework.WebControls.CustDropDownList">
+            <summary>
+            擴展DropDownList控件.;  
+            通過設置IsAddEmpty（true）設置下拉框是否添加空選擇項;  
+            通過設置IsAddAll來選擇添加的空選擇項是[Select]設為true,空選擇項為[All]設為false; 
+            通過給EnumType賦值來綁定枚舉值
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustDropDownList.MsgEmpty">
+            <summary>
+            Empty Valider Message
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustDropDownList.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            輸出控件
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustDropDownList.CreateControlCollection">
+            <summary>
+            重寫list控件使之能添加子控件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.CustDropDownList.CreateChildControls">
+            <summary>
+            添加非空驗證控件
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustDropDownList.ValName">
+            <summary>
+            錯誤消息名
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustDropDownList.IsValEmpty">
+            <summary>
+            是否驗證非空
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustDropDownList.ValEmptyMsg">
+            <summary>
+            自定義錯誤消息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustDropDownList.ValDisplay">
+            <summary>
+            錯誤消息顯示方式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustDropDownList.EnumType">
+            <summary>
+            Enum Type
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustDropDownList.SelectByValue(System.Object)">
+            <summary>
+            根據Value來選擇
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustDropDownList.SelectByText(System.String)">
+            <summary>
+            根據text來選擇
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:Framework.WebControls.CustFileUpload">
+            <summary>
+            擴展WebControls控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustHiddenField">
+            <summary>
+            擴展HiddenField控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustHyperLink">
+            <summary>
+            擴展HyperLink控件
+            <see cref="T:System.Web.UI.WebControls.HyperLink"/>
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustImage">
+            <summary>
+            擴展Image控件
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustImage.IsSetSize">
+            <summary>
+            是否設置圖片顯示（設定一個最大的高度和寬度，保持高寬比）
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustImage.BlankImageUrl">
+            <summary>
+            當圖片無效時顯示的圖片
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustImage.IsShowEffect">
+            <summary>
+            是否打開顯示圖片效果,默認為false
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustImage.Href">
+            <summary>
+            圖片鏈接地址
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustImage.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重載圖片Render事件.根據自定義屬性設置元件顯示樣式
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="T:Framework.WebControls.CustImageButton">
+            <summary>
+            擴展ImageButton控件
+            添加ConfirmMsg屬性，點擊按鈕時提示確認信息ConfirmMsg;
+            添加CheckSaved屬性，點擊按鈕後是否檢查當前頁面是否已保存;
+            <see cref="T:System.Web.UI.WebControls.ImageButton"/>
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustImageButton.EImageButtonType">
+            <summary>
+            用戶類型
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustImageButton.EImageButtonType.View">
+            <summary>
+            查看
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustImageButton.EImageButtonType.Edit">
+            <summary>
+            編輯
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustImageButton.EImageButtonType.Delete">
+            <summary>
+            刪除
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustImageButton.ButtonType">
+            <summary>
+            imagebutton 類型:view,edit,delete
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustImageButton.SetButton(Framework.WebControls.CustImageButton.EImageButtonType)">
+            <summary>
+            根據不同的類型.可以自動帶出相應的圖片
+            </summary>
+            <param name="ButtonType"></param>
+        </member>
+        <member name="T:Framework.WebControls.CustImageMap">
+            <summary>
+            擴展ImageMap控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustLinkButton">
+            <summary>
+            擴展LinkButton控件
+            <see cref="T:System.Web.UI.WebControls.LinkButton"/>
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustListBox">
+            <summary>
+            擴展ListBox控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustLiteral">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustMenu">
+            <summary>
+            擴展Menu控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustMultiView">
+            <summary>
+            擴展MultiView控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustPanel">
+            <summary>
+            擴展Panel控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustPlaceHolder">
+            <summary>
+            擴展PlaceHolder控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustRadioButton">
+            <summary>
+            擴展RadioButton控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustRadioButtonList">
+            <summary>
+            功能：擴展RadioButtonList控件
+            擴展必須選擇驗證
+            <see cref="!:System.Web.UI.WebControls.CustRadioButtonList"/>
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustRadioButtonList.MsgEmpty">
+            <summary>
+            Empty Valider Message
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustRadioButtonList.ValName">
+            <summary>
+            錯誤消息名
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustRadioButtonList.IsValEmpty">
+            <summary>
+            是否驗證非空
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustRadioButtonList.ValEmptyMsg">
+            <summary>
+            自定義錯誤消息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustRadioButtonList.ValDisplay">
+            <summary>
+            錯誤消息顯示方式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustRadioButtonList.EnumType">
+            <summary>
+            Enum Type
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustRadioButtonList.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            輸出控件
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustRadioButtonList.CreateChildControls">
+            <summary>
+            添加非空驗證控件
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustRadioButtonList.SelectByValue(System.Object)">
+            <summary>
+            根據Value來選擇
+            </summary>
+            <param name="value"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustRadioButtonList.SelectByText(System.String)">
+            <summary>
+            根據text來選擇
+            </summary>
+            <param name="text"></param>
+        </member>
+        <member name="T:Framework.WebControls.CustRepeater">
+            <summary>
+            擴展Repeater控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustSubstitution">
+            <summary>
+            擴展Substitution控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustTreeview">
+            <summary>
+            擴展TreeView控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustUpdatePanel">
+            <summary>
+            擴展UpdatePanel控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustView">
+            <summary>
+            擴展View控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustWizard">
+            <summary>
+            擴展Wizard控件
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.FileUploadManager">
+            <summary>
+            文件上傳控制類
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.#cctor">
+            <summary>
+            建構程式.初始化
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.GetCurrent(System.Web.UI.Page)">
+            <summary>
+            得到當前頁面中的FileUploadManager
+            </summary>
+            <param name="page"></param>
+            <returns></returns>
+        </member>
+        <member name="F:Framework.WebControls.FileUploadManager.isInAjaxUploading">
+            <summary>
+            是否FileUploadManager
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.FileUploadManager.SupportAjaxUpload">
+            <summary>
+            是否支持AjaxUpload
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.OnInit(System.EventArgs)">
+            <summary>
+            重寫初始化
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.OnPreRender(System.EventArgs)">
+            <summary>
+            重寫控件繪畫前事件
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.RenderPageCallback(System.Web.UI.HtmlTextWriter,System.Web.UI.Control)">
+            <summary>
+            生成頁面時CallBack
+            </summary>
+            <param name="writer"></param>
+            <param name="pageControl"></param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.EnsureIsInAjaxFileUploading">
+            <summary>
+            確保是AjaxFileUpload元件回傳
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadManager.Page_Error(System.Object,System.EventArgs)">
+            <summary>
+            處理頁面出錯的Hander
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="F:Framework.WebControls.FileUploadManager._PageRequestManager">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.FileUploadManager.PageRequestManager">
+            <summary>
+            讀取和寫入PageRequestManager屬性
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.FileUploadModule">
+            <summary>
+            FileUploadModule
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadModule.Init(System.Web.HttpApplication)">
+            <summary>
+            初始化
+            </summary>
+            <param name="context"></param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadModule.PreSendRequestHeadersHandler(System.Object,System.EventArgs)">
+            <summary>
+            修改Response的Header描述?
+            </summary>
+            <param name="sender"></param>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadModule.Dispose">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.FileUploadUtility">
+            <summary>
+            FileUpload公共方法類
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadUtility.#cctor">
+            <summary>
+            建構程式
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadUtility.WriteScriptBlock(System.Web.HttpResponse,System.Boolean)">
+            <summary>
+            JavaScript的開始或結束語句
+            </summary>
+            <param name="response">HttpResponse二進制流</param>
+            <param name="begin">是否爲開始</param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadUtility.EncodeString(System.IO.TextWriter,System.String,System.String,System.String)">
+            <summary>
+            以指定Encode
+            </summary>
+            <param name="writer"></param>
+            <param name="type"></param>
+            <param name="id"></param>
+            <param name="content"></param>
+        </member>
+        <member name="M:Framework.WebControls.FileUploadUtility.IsInIFrameAsyncPostBack(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            判斷請求是否爲__IsInAjaxFileUploading__回傳的請求
+            </summary>
+            <param name="requestBody"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.WebControls.GridPager">
+            <summary>
+            擴展翻頁控件
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowNavigationToolTip">
+            <summary>
+            ShowNavigationToolTip
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.NavigationToolTipTextFormatString">
+            <summary>
+            NavigationToolTipTextFormatString
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ChinesePageIndex">
+            <summary>
+            中文index
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.NumericButtonTextFormatString">
+            <summary>
+            Format of Index
+            </summary>
+            <remarks>
+            if you set this to [{0}],the index would show like this [1] [2] [3] ... if set to -{0}- it may show -1- -2- -3- ...
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PagingButtonType">
+            <summary>
+            Paging button type
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.NumericButtonType">
+            <summary>
+            It will only be valid when PagingButtonType is set to Image
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.NavigationButtonType">
+            <summary>
+            It will only be valid when PagingButtonType is set to Image
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.MoreButtonType">
+            <summary>
+            more(...)
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PagingButtonSpacing">
+            <summary>
+            Get or set gap among paging buttons
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowFirstLast">
+            <summary>
+            Show First and Last
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowPrevNext">
+            <summary>
+            Show previous and next
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowPageIndex">
+            <summary>
+            Show page index
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.FirstPageText">
+            <summary>
+            The text of first button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PrevPageText">
+            <summary>
+            The text of previous button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.NextPageText">
+            <summary>
+            The text of next button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.LastPageText">
+            <summary>
+            The text of last button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.NumericButtonCount">
+            <summary>
+            Navigation button counts
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowDisabledButtons">
+            <summary>
+            Show disabled buttons
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ImagePath">
+            <summary>
+            當使用圖片按鈕時,圖片所在的文件路徑
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ButtonImageExtension">
+            <summary>
+            獲取或設置當使用圖片按鈕時，圖片的類型，如gif或jpg，該值即圖片文件的後綴名。
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ButtonImageNameExtension">
+            <summary>
+            獲取或設置自定義圖片文件名的後綴字符串，以區分不同類型的按鈕圖片。
+            </summary>
+            <remarks><note>注意：</note>該值不是文件後綴名，而是為區分不同的圖片文件而在圖片名中加入的字符串，如：
+            當前有兩套按鈕圖片，其中一套中的「1」的圖片名可為「1f.gif」，另一套中的「1」的圖片名可起為「1n.gif」，其中的f和n即為ButtonImageNameExtension。</remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CpiButtonImageNameExtension">
+            <summary>
+            獲取或設置當前頁索引按鈕的圖片名後綴。
+            </summary>
+            <remarks>
+            當 <see cref="P:Framework.WebControls.GridPager.PagingButtonType"/> 設為 Image 時，該屬性允許您設置當前頁索引數值按鈕使用的圖片名後綴字符，因此可以使當前頁索引按鈕與其它頁索引按鈕使用不同的圖片，若未設置該值，則默認值為<see cref="P:Framework.WebControls.GridPager.ButtonImageNameExtension"/>，即當前頁索引按鈕與其它頁索引按鈕使用相同的圖片。
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.DisabledButtonImageNameExtension">
+            <summary>
+            獲取或設置已禁用的頁NavigationTool圖片名後綴字符串。
+            </summary>
+            <remarks>
+            當 <see cref="P:Framework.WebControls.GridPager.PagingButtonType"/> 設為 Image 時， 該值允許您設置已禁用（即沒有鏈接，因而點擊後無反應）的頁NavigationTool（包括第一頁、上一頁、下一頁、最後一頁四個按鈕）的圖片文件名後綴字符串，因此可以使已禁用的頁NavigationTool不同於正常的頁NavigationTool。若未設置該值，則默認值為<see cref="P:Framework.WebControls.GridPager.ButtonImageNameExtension"/>，即已禁用的頁NavigationTool與正常的頁NavigationTool使用相同的圖片。
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ButtonImageAlign">
+            <summary>
+            指定當使用圖片按鈕時，圖片的對齊方式。
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.UrlPaging">
+             <summary>
+             Start using url to pass paging info
+             </summary>
+             <remarks>
+             啟用Url分頁方式是將用戶欲訪問的頁索引通過Url來傳遞，由於該分頁方式不使用頁面向自身回發來傳遞數據，
+             所以每次分頁時所有的數據都恢復為初始值或需要重新獲取。使用Url分頁方式不支持動態改變分頁控件的屬性值，
+             因暫時無法將新的屬性值通過Url來傳遞給下一頁。
+             </remarks>
+             <example>以下示例說明如何用AspNetPager的Url分頁方式對DataGrid進行分頁（使用Access數據庫）：
+             <code><![CDATA[
+            <%@Register TagPrefix="Webdiyer" Namespace="Wuqi.Webdiyer" Assembly="aspnetpager"%>
+            <%@Import Namespace="System.Data.OleDb"%>
+            <%@ Import Namespace="System.Data"%>
+            <%@ Page Language="C#" debug=true%>
+            <HTML>
+            	<HEAD>
+            		<TITLE>Welcome to Webdiyer.com </TITLE>
+            		<script runat="server">
+            		OleDbConnection conn;
+            		OleDbCommand cmd;
+            		void Page_Load(object src,EventArgs e){
+            		conn=new OleDbConnection("Provider=Microsoft.Jet.OLEDB.4.0;Data Source="+Server.MapPath("access/aspnetpager.mdb"));
+            		if(!Page.IsPostBack){
+            		cmd=new OleDbCommand("select count(newsid) from wqnews",conn);
+            		conn.Open();
+            		pager.RecordCount=(int)cmd.ExecuteScalar();
+            		conn.Close();
+            		BindData();
+            		}
+            		}
+            
+            		void BindData(){
+            		cmd=new OleDbCommand("select newsid,heading,source,addtime from wqnews order by addtime desc",conn);
+            		OleDbDataAdapter adapter=new OleDbDataAdapter(cmd);
+            		DataSet ds=new DataSet();
+            		adapter.Fill(ds,pager.PageSize*(pager.CurrentPageIndex-1),pager.PageSize,"news");
+            		dg.DataSource=ds.Tables["news"];
+            		dg.DataBind();
+            		}
+            
+            		void ChangePage(object src,PageChangedEventArgs e){
+            		pager.CurrentPageIndex=e.NewPageIndex;
+            		BindData();
+            		}
+            
+            		</script>
+            		<meta http-equiv="Content-Language" content="zh-cn">
+            		<meta http-equiv="content-type" content="text/html;charset=gb2312">
+            		<META NAME="Generator" CONTENT="EditPlus">
+            		<META NAME="Author" CONTENT="Webdiyer(yhaili@21cn.com)">
+            	</HEAD>
+            	<body>
+            		<form runat="server" ID="Form1">
+            			<h2 align="center">AspNetPager分頁示例</h2>
+            			<asp:DataGrid id="dg" runat="server" 
+            			Width="760" CellPadding="4" Align="center" />
+            			
+            			<Webdiyer:AspNetPager runat="server" id="pager" 
+            			OnPageChanged="ChangePage" 
+            			HorizontalAlign="center" 
+            			style="MARGIN-TOP:10px;FONT-SIZE:16px" 
+            			PageSize="8" 
+            			ShowInputBox="always" 
+            			SubmitButtonStyle="border:1px solid #000066;height:20px;width:30px" 
+            			InputBoxStyle="border:1px #0000FF solid;text-align:center" 
+            			SubmitButtonText="轉到" 
+            			UrlPaging="true" 
+            			UrlPageIndexName="pageindex" />
+            		</form>
+            	</body>
+            </HTML>
+             ]]></code>
+             </example>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.UrlPageIndexName">
+            <summary>
+            The parameter name for URL
+            </summary>
+            <remarks>
+            該屬性允許您自定義通過Url傳遞頁索引時表示要傳遞的頁索引的參數的名稱，以避免與現有的參數名重複。
+            <p>該屬性的默認值是「page」，即通過Url分頁時，顯示在瀏覽器地址欄中的Url類似於：</p>http://www.webdiyer.com/aspnetpager/samples/datagrid_url.aspx?page=2 
+            <p>如將該值改為「pageindex」，則上面的Url將變為：</p><p>http://www.webdiyer.com/aspnetpager/samples/datagrid_url.aspx?pageindex=2 </p>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CurrentPageIndex">
+             <summary>
+             Current page index
+             </summary>
+            <remarks>使用此屬性來確定在 AspNetPager 控件中當前顯示的頁，當前顯示的頁的數字索引將以紅色字體加粗顯示。此屬性還用於以編程的方式控制所顯示的頁。
+            <p>　<b>注意：</b>不同於DataGrid控件的CurrentPageIndex，AspNetPager的CurrentPageIndex屬性是從1開始的。</p></remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.RecordCount">
+             <summary>
+             Record count
+             </summary>
+             <remarks>
+             當頁面第一次加載時，應以編程方式將從存儲過程或Sql語句中返回的數據表中所有要分頁的記錄的總數賦予該屬性，AspNetPager會將其保存的ViewState中並在頁面回發時從ViewState中獲取該值，因此避免了每次分頁都要訪問數據庫而影響分頁性能。AspNetPager根據要分頁的所有數據的總項數和 <see cref="P:Framework.WebControls.GridPager.PageSize"/> 屬性來計算顯示所有數據需要的總頁數，即 <see cref="P:Framework.WebControls.GridPager.PageCount"/>的值。
+             </remarks>
+             <example>
+             下面的示例顯示如何以編程方式將從Sql語句返回的記錄總數賦給該屬性：
+             <p>
+             <code><![CDATA[
+             <HTML>
+             <HEAD>
+             <TITLE>Welcome to Webdiyer.com </TITLE>
+             <script runat="server">
+            		SqlConnection conn;
+            		SqlCommand cmd;
+            		void Page_Load(object src,EventArgs e)
+            		{
+            			conn=new SqlConnection(ConfigurationSettings.AppSettings["ConnStr"]);
+            			if(!Page.IsPostBack)
+            			{
+            				cmd=new SqlCommand("select count(id) from news",conn);
+            				conn.Open();
+            				pager.RecordCount=(int)cmd.ExecuteScalar();
+            				conn.Close();
+            				BindData();
+            			}
+            		}
+            
+            		void BindData()
+            		{
+            			cmd=new SqlCommand("GetPagedNews",conn);
+            			cmd.CommandType=CommandType.StoredProcedure;
+            			cmd.Parameters.Add("@pageindex",pager.CurrentPageIndex);
+            			cmd.Parameters.Add("@pagesize",pager.PageSize);
+            			conn.Open();
+            			dataGrid1.DataSource=cmd.ExecuteReader();
+            			dataGrid1.DataBind();
+            			conn.Close();
+            		}
+            		void ChangePage(object src,PageChangedEventArgs e)
+            		{
+            			pager.CurrentPageIndex=e.NewPageIndex;
+            			BindData();
+            		}
+            		</script>
+            		<meta http-equiv="Content-Language" content="zh-cn">
+            		<meta http-equiv="content-type" content="text/html;charset=gb2312">
+            		<META NAME="Generator" CONTENT="EditPlus">
+            		<META NAME="Author" CONTENT="Webdiyer(yhaili@21cn.com)">
+            	</HEAD>
+            	<body>
+            		<form runat="server" ID="Form1">
+            			<asp:DataGrid id="dataGrid1" runat="server" />
+            
+            			<Webdiyer:AspNetPager id="pager" runat="server" 
+            			PageSize="8" 
+            			NumericButtonCount="8" 
+            			ShowCustomInfoSection="before" 
+            			ShowInputBox="always" 
+            			CssClass="mypager" 
+            			HorizontalAlign="center" 
+            			OnPageChanged="ChangePage" />
+            
+            		</form>
+            	</body>
+            </HTML>
+             ]]>
+             </code></p>
+             <p>本示例使用的存儲過程代碼如下：</p>
+             <code><![CDATA[
+            CREATE procedure GetPagedNews
+            		(@pagesize int,
+            		@pageindex int)
+            		as
+            		set nocount on
+            		declare @indextable table(id int identity(1,1),nid int)
+            		declare @PageLowerBound int
+            		declare @PageUpperBound int
+            		set @PageLowerBound=(@pageindex-1)*@pagesize
+            		set @PageUpperBound=@PageLowerBound+@pagesize
+            		set rowcount @PageUpperBound
+            		insert into @indextable(nid) select id from news order by addtime desc
+            		select O.id,O.title,O.source,O.addtime from news O,@indextable t where O.id=t.nid
+            		and t.id>@PageLowerBound and t.id<=@PageUpperBound order by t.id
+            		set nocount off
+            GO
+             ]]>
+             </code>
+             </example>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PagesRemain">
+            <summary>
+            Pages count haven't shown behind current page
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PageSize">
+            <summary>
+            Page size
+            </summary>
+            <remarks>
+            Set page size <see cref="P:Framework.WebControls.GridPager.RecordCount"/> <see cref="P:Framework.WebControls.GridPager.PageCount"/></remarks>
+            <example>see sample <see cref="!:AspNetPager"/> 8 records are shown below,
+            <code>
+            <![CDATA[
+             ...
+             <Webdiyer:AspNetPager id="pager" runat="server" PageSize=8 OnPageChanged="ChangePage"/>
+             ...
+            ]]></code></example>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.RecordsRemain">
+            <summary>
+            Records count haven't shown behind current page
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PageCount">
+            <summary>
+            Page count
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowPageSize">
+             <summary>
+             Show PageSize input box
+             </summary>
+             <remarks>
+             set input box to be shown
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowInputBox">
+             <summary>
+             Show input box
+             </summary>
+             <remarks>
+             set input box to be shown
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.InputBoxClass">
+            <summary>
+            Css class of input box
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.InputBoxStyle">
+            <summary>
+            Style text of input box
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.TextBeforeInputBox">
+            <summary>
+            Text before input box
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.TextAfterInputBox">
+            <summary>
+            Text after input box
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.SubmitButtonText">
+            <summary>
+            Text of submit button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.SubmitButtonClass">
+            <summary>
+            Css class of submit button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.SubmitButtonStyle">
+            <summary>
+            Style text of submit button
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowBoxThreshold">
+            <summary>
+            Auto show input box when page count touch its setting value and <see cref="P:Framework.WebControls.GridPager.ShowInputBox"/> is set to Auto but not Never or Always
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.ShowCustomInfoSection">
+            <summary>
+            The shown way of customize area
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CustomInfoTextAlign">
+            <summary>
+            CustomInfoTextAlign
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CustomInfoSectionWidth">
+            <summary>
+            CustomInfoSectionWidth
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CustomInfoClass">
+            <summary>
+            CustomInfoClass
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CustomInfoStyle">
+            <summary>
+            CustomInfoStyle
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CustomInfoText">
+            <summary>
+            Get custominfo
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.AlwaysShow">
+            <summary>
+            Is pager always shown
+            </summary>
+            <remarks>
+            </remarks>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.CssClass">
+            <summary>
+            Css class of pager 
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.EnableViewState">
+            <summary>
+            Enable viewstate
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.PageIndexOutOfRangeErrorString">
+            <summary>
+            Error message will be shown to user when page index is out of range
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.InvalidPageIndexErrorString">
+            <summary>
+            Error message will be shown to user when page index format which is entered by user is invalid
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.AppendMessage">
+            <summary>
+            Append to no results message
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridPager.AppendName">
+            <summary>
+            AppendName
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.OnLoad(System.EventArgs)">
+            <summary>
+            override<see cref="M:System.Web.UI.Control.OnLoad(System.EventArgs)"/>method
+            </summary>
+            <param name="e"><see cref="T:System.EventArgs"/></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.OnPreRender(System.EventArgs)">
+            <summary>
+            override<see cref="M:System.Web.UI.Control.OnPreRender(System.EventArgs)"/>method
+            modify by Evan(添加ajax方式的腳本, PageSize文本框校驗)
+            </summary>
+            <param name="e"><see cref="T:System.EventArgs"/></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.AddAttributesToRender(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            override<see cref="M:System.Web.UI.WebControls.WebControl.AddAttributesToRender(System.Web.UI.HtmlTextWriter)"/> 
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.RenderBeginTag(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            override<see cref="M:System.Web.UI.WebControls.WebControl.RenderBeginTag(System.Web.UI.HtmlTextWriter)"/> <see cref="!:AspNetPager"/>  <see cref="T:System.Web.UI.HtmlTextWriter"/> 
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.RenderEndTag(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            override<see cref="M:System.Web.UI.WebControls.WebControl.RenderEndTag(System.Web.UI.HtmlTextWriter)"/>  <see cref="!:AspNetPager"/>   <see cref="T:System.Web.UI.HtmlTextWriter"/>  
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/> </param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.RenderContents(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            override<see cref="M:System.Web.UI.WebControls.WebControl.RenderContents(System.Web.UI.HtmlTextWriter)"/>  <see cref="T:System.Web.UI.HtmlTextWriter"/> 
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.GetStyleString">
+            <summary>
+            Change style text to string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.WriteCellAttributes(System.Web.UI.HtmlTextWriter,System.Boolean)">
+            <summary>
+            Set attribute to td for navigation and customer area
+            </summary>
+            <param name="writer"></param>
+            <param name="leftCell">is it the first td</param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.GetHrefString(System.Int32)">
+            <summary>
+            Get string of hyperlink with navigation button
+            </summary>
+            <param name="pageIndex">the index of navigation button corresponded to page index</param>
+            <returns>link string</returns>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.BuildUrlString(System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            URL paging method, add paging parameter to url
+            </summary>
+            <param name="col">paging parameter of key\value pair</param>
+            <returns>the url string</returns>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.CreateNavigationButton(System.Web.UI.HtmlTextWriter,System.String)">
+            <summary>
+            Create navigation button
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+            <param name="btnname">button name</param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.WriteCssClass(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Write the css class
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.AddToolTip(System.Web.UI.HtmlTextWriter,System.Int32)">
+            <summary>
+            Add tool tip to navigation buttons
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+            <param name="pageIndex">the index of navigation button corresponded to page index</param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.CreateNumericButton(System.Web.UI.HtmlTextWriter,System.Int32)">
+            <summary>
+            Create number index of navigation button
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+            <param name="index">index of button for page index</param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.WriteButtonSpace(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            Add space to button
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.GetChinesePageIndex(System.Int32)">
+            <summary>
+            Get Chinese page index
+            </summary>
+            <param name="index">page index</param>
+            <returns>chinese page</returns>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.CreateNumericImages(System.Web.UI.HtmlTextWriter,System.Int32,System.Boolean)">
+            <summary>
+            Create image button
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+            <param name="index">page index</param>
+            <param name="isCurrent">Is it current page</param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.CreateMoreButton(System.Web.UI.HtmlTextWriter,System.Int32)">
+            <summary>
+            Create more(...) button
+            </summary>
+            <param name="writer"><see cref="T:System.Web.UI.HtmlTextWriter"/></param>
+            <param name="pageIndex">page index</param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.RaisePostBackEvent(System.String)">
+            <summary>
+            emplement<see cref="T:System.Web.UI.IPostBackEventHandler"/> interface <see cref="!:AspNetPager"/> 
+            </summary>
+            <param name="args"></param>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.LoadPostData(System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            emplement<see cref="T:System.Web.UI.IPostBackDataHandler"/> interface <see cref="!:AspNetPager"/> 
+            </summary>
+            <param name="pkey">controls' identify</param>
+            <param name="pcol">name\value collection</param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.RaisePostDataChangedEvent">
+            <summary>
+            emplement <see cref="T:System.Web.UI.IPostBackDataHandler"/> interface
+            </summary>
+        </member>
+        <member name="E:Framework.WebControls.GridPager.PageChanged">
+             <summary>
+             page index change
+             </summary>
+             <example>下面的示例顯示如何為PageChanged事件指定和編寫事件處理程序，在該事件處理程序中重新綁定DataGrid上顯示的數據：
+             <code><![CDATA[
+            <%@ Page Language="C#"%>
+            <%@ Import Namespace="System.Data"%>
+            <%@Import Namespace="System.Data.SqlClient"%>
+            <%@Import Namespace="System.Configuration"%>
+            <%@Register TagPrefix="Webdiyer" Namespace="Wuqi.Webdiyer" Assembly="aspnetpager"%>
+            <HTML>
+            <HEAD>
+            <TITLE>Welcome to Webdiyer.com </TITLE>
+              <script runat="server">
+            		SqlConnection conn;
+            		SqlCommand cmd;
+            		void Page_Load(object src,EventArgs e)
+            		{
+            			conn=new SqlConnection(ConfigurationSettings.AppSettings["ConnStr"]);
+            			if(!Page.IsPostBack)
+            			{
+            				cmd=new SqlCommand("GetNews",conn);
+            				cmd.CommandType=CommandType.StoredProcedure;
+            				cmd.Parameters.Add("@pageindex",1);
+            				cmd.Parameters.Add("@pagesize",1);
+            				cmd.Parameters.Add("@docount",true);
+            				conn.Open();
+            				pager.RecordCount=(int)cmd.ExecuteScalar();
+            				conn.Close();
+            				BindData();
+            			}
+            		}
+            
+            		void BindData()
+            		{
+            			cmd=new SqlCommand("GetNews",conn);
+            			cmd.CommandType=CommandType.StoredProcedure;
+            			cmd.Parameters.Add("@pageindex",pager.CurrentPageIndex);
+            			cmd.Parameters.Add("@pagesize",pager.PageSize);
+            			cmd.Parameters.Add("@docount",false);
+            			conn.Open();
+            			dataGrid1.DataSource=cmd.ExecuteReader();
+            			dataGrid1.DataBind();
+            			conn.Close();
+            		}
+            		void ChangePage(object src,PageChangedEventArgs e)
+            		{
+            			pager.CurrentPageIndex=e.NewPageIndex;
+            			BindData();
+            		}
+              </script>
+                 <meta http-equiv="Content-Language" content="zh-cn">
+            		<meta http-equiv="content-type" content="text/html;charset=gb2312">
+            		<META NAME="Generator" CONTENT="EditPlus">
+            		<META NAME="Author" CONTENT="Webdiyer(yhaili@21cn.com)">
+            	</HEAD>
+            	<body>
+            		<form runat="server" ID="Form1">
+            			<asp:DataGrid id="dataGrid1" runat="server" />
+            			<Webdiyer:AspNetPager id="pager" runat="server" PageSize="8" NumericButtonCount="8" ShowCustomInfoSection="before" ShowInputBox="always" CssClass="mypager" HorizontalAlign="center" OnPageChanged="ChangePage" />
+            		</form>
+            	</body>
+            </HTML>
+             ]]>
+             </code>
+             <p>該示例所用的Sql Server存儲過程代碼如下：</p>
+             <code>
+             <![CDATA[
+            CREATE procedure GetNews
+             	(@pagesize int,
+            		@pageindex int,
+            		@docount bit)
+            		as
+            		set nocount on
+            		if(@docount=1)
+            		select count(id) from news
+            		else
+            		begin
+            		declare @indextable table(id int identity(1,1),nid int)
+            		declare @PageLowerBound int
+            		declare @PageUpperBound int
+            		set @PageLowerBound=(@pageindex-1)*@pagesize
+            		set @PageUpperBound=@PageLowerBound+@pagesize
+            		set rowcount @PageUpperBound
+            		insert into @indextable(nid) select id from news order by addtime desc
+            		select O.id,O.source,O.title,O.addtime from news O,@indextable t where O.id=t.nid
+            		and t.id>@PageLowerBound and t.id<=@PageUpperBound order by t.id
+            		end
+            		set nocount off
+            GO
+             ]]>
+             </code>
+            </example>
+        </member>
+        <member name="M:Framework.WebControls.GridPager.OnPageChanged(Framework.WebControls.PageChangedEventArgs)">
+            <summary>
+            emplement<see cref="E:Framework.WebControls.GridPager.PageChanged"/> 
+            </summary>
+            <param name="e"> <see cref="T:Framework.WebControls.PageChangedEventArgs"/> </param>
+        </member>
+        <member name="T:Framework.WebControls.PageChangedEventHandler">
+            <summary>
+            define <see cref="!:AspNetPager.PageChanged"/> delegate
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.PageChangedEventArgs">
+            <summary>
+             <see cref="!:AspNetPager"/> event args<see cref="!:AspNetPager.PageChanged"/> 
+            </summary>
+            <remarks>
+            <see cref="!:AspNetPager"/>page index changed<see cref="!:AspNetPager.PageChanged"/> 
+            </remarks>
+        </member>
+        <member name="M:Framework.WebControls.PageChangedEventArgs.#ctor(System.Int32)">
+            <summary>
+            initial
+            </summary>
+            <param name="newPageIndex">new page index <see cref="!:AspNetPager"/> </param>
+        </member>
+        <member name="P:Framework.WebControls.PageChangedEventArgs.NewPageIndex">
+             <summary>
+             獲取用戶在 <see cref="!:AspNetPager"/> 控件的頁選擇元素中選定的或在頁索引文本框中手工輸入的頁的索引。
+             </summary>
+            <value>用戶在 <see cref="!:AspNetPager"/> 控件的頁選擇元素中選定的或在頁索引文本框中輸入的頁的索引。
+            </value>
+            <remarks>
+            使用 NewPageIndex 屬性確定用戶在 <see cref="!:AspNetPager"/> 控件的頁選擇元素中選定的或在頁索引文本框中輸入的頁的索引。
+            該值常用於設置要顯示選定頁的 AspNetPager 控件的 <see cref="!:AspNetPager.CurrentPageIndex"/> 屬性。
+            </remarks>
+            <example>
+             下面的示例顯示如何使用 NewPageIndex 屬性確定用戶在 <see cref="!:AspNetPager"/> 控件的頁選擇元素中選定的或在頁索引文本框中輸入的頁的索引。
+            該值然後用於設置要顯示選定頁的 AspNetPager 控件的 <see cref="!:AspNetPager.CurrentPageIndex"/> 屬性，並對數據顯示控件重新綁定數據。
+             <code><![CDATA[
+            <%@ Page Language="C#"%>
+            <%@ Import Namespace="System.Data"%>
+            <%@Import Namespace="System.Data.SqlClient"%>
+            <%@Import Namespace="System.Configuration"%>
+            <%@Register TagPrefix="Webdiyer" Namespace="Wuqi.Webdiyer" Assembly="aspnetpager"%>
+            <HTML>
+            <HEAD>
+            <TITLE>Welcome to Webdiyer.com </TITLE>
+              <script runat="server">
+            		SqlConnection conn;
+            		SqlCommand cmd;
+            		void Page_Load(object src,EventArgs e)
+            		{
+            			conn=new SqlConnection(ConfigurationSettings.AppSettings["ConnStr"]);
+            			if(!Page.IsPostBack)
+            			{
+            				cmd=new SqlCommand("GetNews",conn);
+            				cmd.CommandType=CommandType.StoredProcedure;
+            				cmd.Parameters.Add("@pageindex",1);
+            				cmd.Parameters.Add("@pagesize",1);
+            				cmd.Parameters.Add("@docount",true);
+            				conn.Open();
+            				pager.RecordCount=(int)cmd.ExecuteScalar();
+            				conn.Close();
+            				BindData();
+            			}
+            		}
+            
+            		void BindData()
+            		{
+            			cmd=new SqlCommand("GetNews",conn);
+            			cmd.CommandType=CommandType.StoredProcedure;
+            			cmd.Parameters.Add("@pageindex",pager.CurrentPageIndex);
+            			cmd.Parameters.Add("@pagesize",pager.PageSize);
+            			cmd.Parameters.Add("@docount",false);
+            			conn.Open();
+            			dataGrid1.DataSource=cmd.ExecuteReader();
+            			dataGrid1.DataBind();
+            			conn.Close();
+            		}
+            		void ChangePage(object src,PageChangedEventArgs e)
+            		{
+            			pager.CurrentPageIndex=e.NewPageIndex;
+            			BindData();
+            		}
+              </script>
+                 <meta http-equiv="Content-Language" content="zh-cn">
+            		<meta http-equiv="content-type" content="text/html;charset=gb2312">
+            		<META NAME="Generator" CONTENT="EditPlus">
+            		<META NAME="Author" CONTENT="Webdiyer(yhaili@21cn.com)">
+            	</HEAD>
+            	<body>
+            		<form runat="server" ID="Form1">
+            			<asp:DataGrid id="dataGrid1" runat="server" />
+            
+            			<Webdiyer:AspNetPager id="pager" 
+            			runat="server" 
+            			PageSize="8" 
+            			NumericButtonCount="8" 
+            			ShowCustomInfoSection="before" 
+            			ShowInputBox="always" 
+            			CssClass="mypager" 
+            			HorizontalAlign="center" 
+            			OnPageChanged="ChangePage" />
+            
+            		</form>
+            	</body>
+            </HTML>
+             ]]>
+             </code>
+             <p>下面是該示例所用的Sql Server存儲過程：</p>
+             <code>
+             <![CDATA[
+            CREATE procedure GetNews
+             	(@pagesize int,
+            		@pageindex int,
+            		@docount bit)
+            		as
+            		set nocount on
+            		if(@docount=1)
+            		select count(id) from news
+            		else
+            		begin
+            		declare @indextable table(id int identity(1,1),nid int)
+            		declare @PageLowerBound int
+            		declare @PageUpperBound int
+            		set @PageLowerBound=(@pageindex-1)*@pagesize
+            		set @PageUpperBound=@PageLowerBound+@pagesize
+            		set rowcount @PageUpperBound
+            		insert into @indextable(nid) select id from news order by addtime desc
+            		select O.id,O.source,O.title,O.addtime from news O,@indextable t where O.id=t.nid
+            		and t.id>@PageLowerBound and t.id<=@PageUpperBound order by t.id
+            		end
+            		set nocount off
+            GO
+             ]]>
+             </code>
+            </example>
+        </member>
+        <member name="T:Framework.WebControls.ShowInputBox">
+            <summary>
+            way for Input box shown
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.ShowInputBox.Never">
+            <summary>
+            never show input box
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.ShowInputBox.Auto">
+            <summary>
+            auto show input box by <see cref="!:AspNetPager.ShowBoxThreshold"/> 
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.ShowInputBox.Always">
+            <summary>
+            always show input box
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.ShowCustomInfoSection">
+            <summary>
+            Where is the customer info shown
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.ShowCustomInfoSection.Never">
+            <summary>
+            never shown
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.ShowCustomInfoSection.Left">
+            <summary>
+            shown before navigation
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.ShowCustomInfoSection.Right">
+            <summary>
+            shown after navigation
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.PagingButtonType">
+            <summary>
+            specify page button type
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.PagingButtonType.Text">
+            <summary>
+            text
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.PagingButtonType.Image">
+            <summary>
+            image
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.PagerDesigner">
+            <summary>
+            <see cref="!:AspNetPager"/> designer
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.PagerDesigner.#ctor">
+            <summary>
+            構建程式
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.PagerDesigner.GetDesignTimeHtml">
+            <summary>
+            override GetDesignTimeHtml
+            display designer
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.PagerDesigner.GetEditableDesignerRegionContent(System.Web.UI.Design.EditableDesignerRegion)">
+            <summary>
+            Region不可被選擇
+            </summary>
+            <param name="region"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.PagerDesigner.GetErrorDesignTimeHtml(System.Exception)">
+            <summary>
+            override GetErrorDesignTimeHtml
+            display errors while creating control
+            </summary>
+            <param name="e">exception</param>
+            <returns>html error</returns>
+        </member>
+        <member name="T:Framework.WebControls.CustGridView">
+            <summary>
+            擴展GridView控件
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.ShowHeaderAllways">
+            <summary>
+            是否永久顯示標題列
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.PagerID">
+            <summary>
+            翻頁元件ID
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.CssClass">
+            <summary>
+            樣式名稱
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.AllowPaging">
+            <summary>
+            是否允許分頁
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.AutoGenerateColumns">
+            <summary>
+            自動生成欄位
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.SNWidth">
+            <summary>
+            序號欄位寬度
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.PagerVisible">
+            <summary>
+            翻頁元件是否可見
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.SortAscImageUrl">
+            <summary>
+            升序圖片URL
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustGridView.SortDescImageUrl">
+            <summary>
+            降序圖片URL
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustGridView.OnInit(System.EventArgs)">
+            <summary>
+            重載初始化.設定預設樣式
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustGridView.OnPreRender(System.EventArgs)">
+            <summary>
+            重載Render
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustGridView.OnRowCreated(System.Web.UI.WebControls.GridViewRowEventArgs)">
+            <summary>
+            重載當Row生成時.當選擇某個欄位是排序欄位.則該欄位標題顯示排序圖片
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustGridView.DisplaySortOrderImages(System.String,System.Web.UI.WebControls.GridViewRow)">
+            <summary>
+             繪製升降序圖片
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustGridView.SearchSortExpression(System.String[],System.String,System.String@,System.Int32@)">
+            <summary>
+             獲取當前表達式對所選列進行排序
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustGridView.CreateHeaderRow">
+            <summary>
+            創建表頭
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustLabel">
+            <summary>
+            自定義Label元件;  
+            可以設置ShowID來自動顯示Show.xml中相應文字;  
+            可以設置多少字后省略.可以設置多少字后自動折行;  
+            通过设置SetBreak（true）以及NumBreak属性来设置标签显示多少个字符进行折行;  
+            通过设置Height来固定标签显示的高度，高度超过设定高度则会在页面右侧出现滚动条;  
+            通过设置SetOmit（true）以及NumOmit属性来设置标签显示多少个字符后，多余的部分用省略号代替;  
+            设置IsCurrency后会将金额型数字字符串格式化.相关设置属性有CurSymbol(货币符号),FractionalDigit(小数位数);   
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.DateFormat">
+            <summary>
+            日期格式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.SetBreak">
+            <summary>
+            设置是否需要折行
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.NumBreak">
+            <summary>
+            设置多少个字符需要折行
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.NeedDateFormat">
+            <summary>
+            是否需要对日期格式化
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.SetOmit">
+            <summary>
+            设置是否需要省略显示
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.NumOmit">
+            <summary>
+            设置需要省略显示的长度
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.StickHeight">
+            <summary>
+            设置是否需要固定高度
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.isCurrency">
+            <summary>
+            是否货币格式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.IsCurrency">
+            <summary>
+            是否格式化成货币形式
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.isColon">
+            <summary>
+            是否顯示冒號
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.IsColon">
+            <summary>
+            是否顯示冒號
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.showID">
+            <summary>
+            文字顯示XML的ID
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.ShowID">
+            <summary>
+            文字顯示XML的ID,如'01_02030000_003'
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.curSymbol">
+            <summary>
+            货币标识默认为英镑￡(html:&#163;)
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.CurSymbol">
+            <summary>
+            货币标示
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.curAlign">
+            <summary>
+            货币对方式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.CurAlign">
+            <summary>
+            货币对齐
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustLabel.fractionalDigit">
+            <summary>
+            货币小数为位默认为2位
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustLabel.FractionalDigit">
+            <summary>
+            设置货币的小数位,默认为2
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustLabel.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重載Render繪畫元件事件.通過屬性來重設Label顯示的效果
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="M:Framework.WebControls.CustLabel.FormatCurrency(System.String,System.Int32)">
+            <summary>
+            将字符串金额格式化"9785.335"→"9,78.33"
+            </summary>
+            <param name="strPriceValue">價格</param>
+            <param name="fractionalDigit">符號</param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.CustLabel.AutoBreakWord(System.String,System.Int32)">
+            <summary>
+            指定位數自動換行(\n)
+            </summary>
+            <param name="str">文字</param>
+            <param name="length">折行的內容</param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.CustLabel.StringRestric(System.String,System.Int32)">
+            <summary>
+            省略顯示string,設置爲懸停才顯示完整文字
+            </summary>
+            <param name="strVal">文字內容</param>
+            <param name="len">不省略的長度</param>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.WebControls.CustTextBox">
+            <summary>
+            擴展TextBox控件
+            1.擴展必須控制輸入類型包括文本、數字等。
+            2.添加驗證功能，包括非空、範圍、規則驗證。
+            3.添加危險字符驗證功能。
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.ValName">
+            <summary>
+            驗證名
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.Display">
+            <summary>
+            驗證顯示格式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.IsValDanger">
+            <summary>
+            是否驗證危險字符
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.ValDangerMsg">
+            <summary>
+            驗證危險字符消息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.IsValEmpty">
+            <summary>
+            非空驗證控件
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.ValEmptyMsg">
+            <summary>
+            自定義非空驗證消息
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustTextBox.ERegularType">
+            <summary>
+            驗證類型的枚舉
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.ERegularType.Custom">
+            <summary>
+            自定義
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.ERegularType.EMail">
+            <summary>
+            email
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.IsValRegular">
+            <summary>
+            是否規則驗證
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.RegularType">
+            <summary>
+            規則驗證類型
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.ValExpression">
+            <summary>
+            規則驗證表達式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.ValRegularMsg">
+            <summary>
+            自定義規則驗證消息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.IsValRange">
+            <summary>
+            是否範圍驗證
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.MaxValue">
+            <summary>
+            範圍驗證最大值
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.MinValue">
+            <summary>
+            範圍驗證最小值
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.ValRangeMsg">
+            <summary>
+            自定義範圍驗證消息
+            </summary>
+        </member>
+        <member name="T:Framework.WebControls.CustTextBox.textType">
+            <summary>
+            文本類型
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.String">
+            <summary>
+            任意文本
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Upper">
+            <summary>
+            大寫字母
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Lower">
+            <summary>
+            小寫
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Int">
+            <summary>
+            數字
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.LetterAndInt">
+            <summary>
+            letterAndInt
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Float">
+            <summary>
+            Float
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.ChineseLanguage">
+            <summary>
+            中文
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Memo">
+            <summary>
+            Memo
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Phone">
+            <summary>
+            固定電話
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.CustTextBox.textType.Money">
+            <summary>
+            金額
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.Text">
+            <summary>
+            重寫.文字內容.自動trim後面
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.InputType">
+            <summary>
+            文本框錄入的模式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.OnFocusCssName">
+            <summary>
+            控件得到焦點的樣式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.OnBlurCssName">
+            <summary>
+            控件得到焦點的樣式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.FloatLength">
+            <summary>
+            當是浮點數時，指定小數位數
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.IsReadOnly">
+            <summary>
+            設置是否ReadOnly
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.CustTextBox.IsLeftAlign">
+            <summary>
+            是否左對齊
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustTextBox.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重寫Html輸出函數
+            </summary>
+            <param name="writer">要寫出到的 HTML 編寫器</param>
+        </member>
+        <member name="M:Framework.WebControls.CustTextBox.CreateChildControls">
+            <summary>
+            重寫派生子元件
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.CustTextBox.AddAttributesToRender(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重寫屬性輸出函數
+            </summary>
+            <param name="writer">要寫出到的 HTML 編寫器</param>
+        </member>
+        <member name="M:Framework.WebControls.CustTextBox.regBaseInputScript">
+            <summary>
+            注冊基本JS腳本
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.CustTextBox.GetValRangeScript">
+            <summary>
+            得到驗證範圍JS腳本
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.CustTextBox.getScript(System.Boolean,System.Boolean,System.String)">
+            <summary>
+            得到設置CSS樣式或輸入法的JS
+            </summary>
+            <param name="Focus"></param>
+            <param name="Flag"></param>
+            <param name="inscript"></param>
+            <returns></returns>
+        </member>
+        <member name="T:Framework.WebControls.GridViewPageingByDB">
+            <summary>
+            資料庫分頁表格
+            </summary>
+        </member>
+        <member name="E:Framework.WebControls.GridViewPageingByDB.OnSetDataSource">
+            <summary>
+            委托.當設置資料來源時
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.checkBoxes">
+            <summary>
+            選擇框按鈕集合
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.#ctor">
+            <summary>
+            建構
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.GridViewPageingByDB_Sorting(System.Object,System.Web.UI.WebControls.GridViewSortEventArgs)">
+            <summary>
+            排序事件方法
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.GridViewPageingByDB_RowDataBound(System.Object,System.Web.UI.WebControls.GridViewRowEventArgs)">
+            <summary>
+            重寫RowDataBound事件方法
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.OnInit(System.EventArgs)">
+            <summary>
+            重寫初始化
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.GridViewPageingByDB_Load(System.Object,System.EventArgs)">
+            <summary>
+            重寫Load事件方法
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.OnDataBinding(System.EventArgs)">
+            <summary>
+            重寫資料綁定
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.OnSorting(System.Web.UI.WebControls.GridViewSortEventArgs)">
+            <summary>
+            重寫排序事件方法
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.SelectedIDS">
+            <summary>
+            被選擇的編碼集合字符串
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.selectedIDS">
+            <summary>
+            選擇的主鍵值字符形式集合
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.selectedIDList">
+            <summary>
+            選擇的主鍵值集合
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.EditPageUrl">
+            <summary>
+            編輯頁地址
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.editPageUrl">
+            <summary>
+            編輯頁面地址
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.EditPageUrlParameters">
+            <summary>
+            要給編輯頁面的參數
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.editPageUrlParameters">
+            <summary>
+            編輯頁面參數
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.ShowEditButton">
+            <summary>
+            顯示編輯按鈕列
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.showEditButton">
+            <summary>
+            是否使用編輯列
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.ShowCheckBox">
+            <summary>
+            顯示多選框列
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.showCheckBox">
+            <summary>
+            是否使用選擇框列
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.CheckRowNumber">
+            <summary>
+            選擇時返回值加入行號
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.checkRowNumber">
+            <summary>
+            選擇行號
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.PageString">
+            <summary>
+            列頭部文字集合字符串
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.ColumnsHeaderText">
+            <summary>
+            頁字符
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.EditCellWidth">
+            <summary>
+            編輯按鈕列寬度
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.FirstPageText">
+            <summary>
+            最前頁文本
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.PreviousPageText">
+            <summary>
+            上一頁文本
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.strPageNumberTooLong">
+            <summary>
+            頁碼輸入過大提示信息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.PageNumberTooLong">
+            <summary>
+            頁碼輸入過大提示信息
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.strPageNumberErr">
+            <summary>
+            頁碼輸入錯誤提示信息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.PageNumberErr">
+            <summary>
+            頁碼輸入錯誤提示信息
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.strNoneData">
+            <summary>
+            查無資料信息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.NoneData">
+            <summary>
+            查無資料信息
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.NextPageText">
+            <summary>
+            下一頁文本
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.LastPageText">
+            <summary>
+            最後頁文本
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.EditButtonText">
+            <summary>
+            編輯按鈕文字
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.editButtonText">
+            <summary>
+            編輯按鈕文字
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.EditButtonImageUrl">
+            <summary>
+            編輯按鈕圖片地址
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.editButtonImageUrl">
+            <summary>
+            編輯按鈕圖片
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.PageCount">
+            <summary>
+            頁面數量
+            </summary>
+        </member>
+        <member name="F:Framework.WebControls.GridViewPageingByDB.blnHasDataRow">
+            <summary>
+            資料表中是否有資料行
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.PageIndex">
+            <summary>
+            當前頁碼
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.AllowPaging">
+            <summary>
+            是否分頁
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.SortExpression">
+            <summary>
+            排序表達式
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.SortDirection">
+            <summary>
+            排序方式
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.InitializeRow(System.Web.UI.WebControls.GridViewRow,System.Web.UI.WebControls.DataControlField[])">
+            <summary>
+            重寫行初始化
+            </summary>
+            <param name="row">行</param>
+            <param name="fields">欄位</param>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.OnPreRender(System.EventArgs)">
+            <summary>
+            重寫控件繪畫前動作
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重寫繪製
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.GetLinkCell(System.String,System.String,System.Boolean)">
+            <summary>
+            獲得帶Link控制項的Cell物件
+            </summary>
+            <param name="text">鏈接文字</param>
+            <param name="url">鏈接地址</param>
+            <param name="isImage">是否使用圖片</param>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.SortAscImageUrl">
+            <summary>
+            升序
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.SortDescImageUrl">
+            <summary>
+            降序
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.GridViewPageingByDB.ShowHeaderAllways">
+            <summary>
+            ShowHeaderAllways
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.SetColumnHeaderTextByLocalResource">
+            <summary>
+            設置列頭文字
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.BindData">
+            <summary>
+            加載資料
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.SetData">
+            <summary>
+            綁定資料
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.CreateHeaderRow">
+            <summary>
+            創建表頭
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.System#Web#UI#IPostBackDataHandler#LoadPostData(System.String,System.Collections.Specialized.NameValueCollection)">
+            <summary>
+            啥都沒有做.全註解掉了
+            </summary>
+            <param name="postDataKey"></param>
+            <param name="postCollection"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.System#Web#UI#IPostBackDataHandler#RaisePostDataChangedEvent">
+            <summary>
+            啥都沒有做
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.DisplaySortOrderImages(System.String,System.Web.UI.WebControls.GridViewRow)">
+            <summary>
+             繪製升降序圖片
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.SearchSortExpression(System.String[],System.String,System.String@,System.Int32@)">
+            <summary>
+             獲取當前表達式對所選列進行排序
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.GridViewPageingByDB.OnRowCreated(System.Web.UI.WebControls.GridViewRowEventArgs)">
+            <summary>
+            重寫.當row生成時的動作
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="T:Framework.WebControls.OnSetDataSourceDelegate">
+            <summary>
+            綁定資料事件的委託
+            </summary>
+            <param name="sender">事件物件</param>
+            <param name="e">事件參數</param>
+        </member>
+        <member name="T:Framework.WebControls.SetDataSourceEventArgs">
+            <summary>
+            綁定資料事件參數
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.Table">
+            <summary>
+            查詢后得到的資料表
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.SortExpression">
+            <summary>
+            排序依據
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.SortDirection">
+            <summary>
+            排序方向
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.PageCount">
+            <summary>
+            頁面數量
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.RowCount">
+            <summary>
+            資料行數量
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.FirstRow">
+            <summary>
+            第一行行號
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.LastRow">
+            <summary>
+            最後一行行號
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.SetDataSourceEventArgs.PageSize">
+            <summary>
+            每頁行數
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.SetDataSourceEventArgs.#ctor(System.Int32,System.Int32,System.String,System.Web.UI.WebControls.SortDirection)">
+            <summary>
+            建構
+            </summary>
+            <param name="pageIndex">當前頁碼</param>
+            <param name="pageSize">每頁行數</param>
+            <param name="sortExpressionl">排序依據</param>
+            <param name="sortDirection">排序方向</param>
+        </member>
+        <member name="M:Framework.WebControls.SetDataSourceEventArgs.FillByDataTable(System.Data.DataTable)">
+            <summary>
+            根據已有DataTable實現資料分頁
+            </summary>
+            <param name="baseTable">已有DataTable</param>
+        </member>
+        <member name="T:Framework.WebControls.MoveListBox">
+            <summary>
+            移選控制項
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.AddedBox">
+            <summary>
+            需要添加的資料域
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.DeletedBox">
+            <summary>
+            需要刪除的資料域
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.RightListBox">
+            <summary>
+            操作目標列表控制項
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.#ctor">
+            <summary>
+            建構
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.BaseItems">
+            <summary>
+            原有已被選擇的資料鍵值對
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.GetMastAddData">
+            <summary>
+            獲得變動后必須添加的資料鍵值對
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.GetMastDelData">
+            <summary>
+            獲得變動后必須刪除的資料鍵值對
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.GetMastAddValuesArray">
+            <summary>
+            獲得變動后必須添加的資料集合
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.MastAddValues">
+            <summary>
+            需要添加的資料
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.GetMastDelValuesArray">
+            <summary>
+            獲得變動后必須刪除的資料集合
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.MastDelValues">
+            <summary>
+            需要刪除的資料
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.GetUserSelectedData">
+            <summary>
+            獲得變動后用戶選取的資料鍵值對
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.GetUserSelectedValuesArray">
+            <summary>
+            獲得變動后用戶選取的資料集合
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.MoveListBox.UserSelectedValues">
+            <summary>
+            用戶已選擇刪除的資料
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.OnInit(System.EventArgs)">
+            <summary>
+            重寫初始化
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.OnLoad(System.EventArgs)">
+            <summary>
+            重寫加載
+            </summary>
+            <param name="e"></param>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.DataBind">
+            <summary>
+            重寫資料綁定
+            </summary>
+        </member>
+        <member name="M:Framework.WebControls.MoveListBox.Render(System.Web.UI.HtmlTextWriter)">
+            <summary>
+            重寫繪製
+            </summary>
+            <param name="writer"></param>
+        </member>
+        <member name="T:Framework.WebControls.Properties.Resources">
+            <summary>
+              用於查詢當地語系化字串等的強類型資源類別。
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.Properties.Resources.ResourceManager">
+            <summary>
+              傳回這個類別使用的快取的 ResourceManager 執行個體。
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.Properties.Resources.Culture">
+            <summary>
+              覆寫目前執行緒的 CurrentUICulture 屬性，對象是所有
+              使用這個強類型資源類別的資源查閱。
+            </summary>
+        </member>
+        <member name="P:Framework.WebControls.Properties.Resources.AjaxValidatorScript">
+             <summary>
+               查詢類似 function AjaxValidatorFunction(source, arguments)
+            {
+            	var webRequest = false;
+            	if(window.XMLHttpRequest)
+            	{ 
+            		webRequest = new XMLHttpRequest();
+            	} 
+            	else if(window.ActiveXObject)
+            	{
+            		try 
+            		{ 
+            			webRequest = new ActiveXObject(&apos;Msxml2.XMLHTTP&apos;);
+            		} 
+            		catch (e1)
+            		{ 
+            			try 
+            			{ 
+            				webRequest = new ActiveXObject(&apos;Microsoft.XMLHTTP&apos;);
+            			} 
+            			catch (e2)  
+            			{}
+            		}
+            	}
+            	if(webRequest)
+            	{
+            		var Ctrl=document.getElementById(source.controltovalidate); 
+            		var formText=&apos;QueryCtrl=&apos; [字串的其餘部分已遭截斷]&quot;; 的當地語系化字串。
+             </summary>
+        </member>
+        <member name="P:Framework.WebControls.Properties.Resources.ReportViewLogScript">
+             <summary>
+               查詢類似 function ReportViewSaveLog(id,actionType,url)
+            {
+            	var webRequest = false;
+            	if(window.XMLHttpRequest)
+            	{ 
+            		webRequest = new XMLHttpRequest();
+            	} 
+            	else if(window.ActiveXObject)
+            	{
+            		try 
+            		{ 
+            			webRequest = new ActiveXObject(&apos;Msxml2.XMLHTTP&apos;);
+            		} 
+            		catch (e1)
+            		{ 
+            			try 
+            			{ 
+            				webRequest = new ActiveXObject(&apos;Microsoft.XMLHTTP&apos;);
+            			} 
+            			catch (e2)  
+            			{}
+            		}
+            	}
+            	if(webRequest)
+            	{
+            		var Ctrl=document.getElementById(id);
+            		var formText=&apos;QueryCtrl=&apos;+encodeURI(id)+&apos;&amp;QueryData= [字串的其餘部分已遭截斷]&quot;; 的當地語系化字串。
+             </summary>
+        </member>
+    </members>
+</doc>

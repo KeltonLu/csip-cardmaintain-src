@@ -1,0 +1,145 @@
+﻿
+/*--------------- Begin Table  style ---------------*/	
+.trOdd {FONT-SIZE: 9pt;
+	padding-top: 1px;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	FONT-FAMILY: "Verdana";
+	background-color: #FFFFFF	;
+}
+.trEven{ 		FONT-SIZE: 9pt;
+	
+	padding-top: 1px;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	FONT-FAMILY: "Verdana";
+	background-color: #CEF9F9;
+}
+
+td{width:25%;height:25px;}
+.itemTitle  {
+	FONT-SIZE: 9pt;
+	FONT-STYLE: normal;
+	font-weight: normal;
+	COLOR: #FFFFFF;
+	background-color: #006666;
+	padding-left: 3px;
+	padding-right: 3px;
+}
+/*--------------- End Table style  ---------------*/
+
+/*--------------- Begin Button  style ---------------*/	
+.smallButton {
+	FONT-WEIGHT: normal;FONT-SIZE: 8pt;COLOR: #006666;FONT-STYLE: normal;FONT-FAMILY: "verdana";background-color: #CEF9F9;border: 1px solid #c8d5b3;
+}
+
+.ChoiceButton
+{
+	BORDER-TOP-WIDTH: 0px; BORDER-LEFT-WIDTH: 0px; BORDER-BOTTOM-WIDTH: 0px; BACKGROUND-COLOR: transparent; BORDER-RIGHT-WIDTH: 0px
+	}
+/*--------------- End Button style  ---------------*/
+
+
+
+	
+/*--------------- Begin Gridview Gridpager style ---------------*/
+.buttongo
+{
+	FONT-WEIGHT: normal;FONT-SIZE: 8pt;COLOR: #006666;FONT-STYLE: normal;FONT-FAMILY: "verdana";background-color: #CEF9F9;border: 1px solid #c8d5b3;
+    cursor: pointer;
+    height:22px;
+    border: #c8d5b3 1px solid;
+}
+.buttonpage
+{
+	
+	FONT-WEIGHT: normal;FONT-SIZE: 8pt;COLOR: #006666;FONT-STYLE: normal;FONT-FAMILY: "verdana";background-color: #CEF9F9;border: 1px solid #c8d5b3;
+    cursor: pointer;
+    height:22px;
+    border: #c8d5b3 1px solid;
+}
+.Grid_Header
+{
+	FONT-SIZE: 9pt;
+	FONT-STYLE: normal;
+	font-weight: bold;
+	COLOR: #007E7A;
+	HEIGHT: 25px;
+	background-color: #A0CCCC;
+	padding-top: 1px;
+	padding-left: 3px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+		text-align:center;
+}
+.Grid_Item
+{		text-align:left;	padding-left: 5px;
+		padding-top: 1px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	FONT-FAMILY: "Verdana";
+	FONT-SIZE: 9pt;
+background-color:WHITE;height:25px;
+}
+.Grid_Choice
+{		text-align:center;padding-left: 0px;	
+}
+.Grid_AlternatingItem
+{			text-align:left;	padding-left: 5px;
+		padding-top: 1px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	FONT-FAMILY: "Verdana";
+	FONT-SIZE: 9pt;
+background-color:#D3F3F3;
+}
+.Grid_SelectedItem
+{
+	text-align:left;	
+	padding-left: 5px;
+	padding-top: 1px;
+	padding-right: 3px;
+	padding-bottom: 1px;
+	FONT-FAMILY: "Verdana";
+	FONT-SIZE: 9pt;
+    background-color: #FCF6DE;
+}
+.divPager
+{
+    vertical-align: middle;
+    margin-top:10px;
+    margin-bottom:10px;
+}
+.CurrentPageIndex
+{
+    border: #aa0000 0px solid;
+    	color:#CEF9F9;
+	font-size:9pt;
+    width: 70px;
+}
+.buttonProfile
+{
+	color:#CEF9F9;
+	font-size: 9pt;
+    text-align: center;
+    background: #F9FAED; border: #c8d5b3 1px solid;
+}
+/*--------------- End Gridview style for main usercontorl ---------------*/
+
+
+.loginText
+{
+	text-align:right;color:White;
+	}
+	
+	
+	.workingArea {
+	background-color: #008888;width:95%
+}
+
+input 
+{
+    padding: 2px;
+}

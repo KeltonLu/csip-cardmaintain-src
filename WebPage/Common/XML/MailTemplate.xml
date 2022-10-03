@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<MailTemplates>
+  <!--1.9	Purchase Orders
+      1.9.4	Purchase Order Submitted (cc the email to the Buyer)-->
+  <MailTemplate id="1">
+    <formreg>-1</formreg>
+    <mailname></mailname>
+    <mailtitle>Title</mailtitle>
+    <mailbody>
+      Dear Name:
+
+         開始時間：StartTime
+         
+         結束時間：EndTime
+         
+                狀態： Status
+         
+         執行結果：Message
+      
+      Regards
+    </mailbody>
+    <formmodle></formmodle>
+    <mailtags>
+      <mailtag>
+        <tagname>DateTime</tagname>
+        <tagvalue>[DateTime]</tagvalue>
+      </mailtag>
+      <mailtag>
+        <tagname>Sender</tagname>
+        <tagvalue>[Sender]</tagvalue>
+      </mailtag>
+    </mailtags>
+  </MailTemplate>
+
+	<MailTemplate id="2">
+		<formreg>-1</formreg>
+		<mailname></mailname>
+		<mailtitle>Title</mailtitle>
+		<mailbody>
+			Dear Name:
+
+			開始時間：StartTime
+
+			結束時間：EndTime
+
+			執行結果：Message
+
+			Regards
+		</mailbody>
+		<formmodle></formmodle>
+		<mailtags>
+			<mailtag>
+				<tagname>DateTime</tagname>
+				<tagvalue>[DateTime]</tagvalue>
+			</mailtag>
+			<mailtag>
+				<tagname>Sender</tagname>
+				<tagvalue>[Sender]</tagvalue>
+			</mailtag>
+		</mailtags>
+	</MailTemplate>
+</MailTemplates>
+<!--Max ID : 123-->
