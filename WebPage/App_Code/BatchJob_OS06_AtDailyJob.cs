@@ -22,6 +22,7 @@ using CSIPCommonModel.EntityLayer;
 using Framework.Common.Logging;
 using Framework.Common.Utility;
 using Framework.Common.Message;
+using System.Collections.Generic;
 
 /// <summary>
 /// BatchJob_OS06_AtDailyJOB 的摘要描述
@@ -54,6 +55,11 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
         bool truncateStatus = false;
         int correctDataCount = 0;
         int errorDataCount = 0;
+
+        // 20221004 調整將資料拆成多個檔案 By Kelton start
+        List<datInfo> datInfos = new List<datInfo>();
+        bool OS06FileSplitFlag = Convert.ToBoolean(UtilHelper.GetAppSettings("OS06FileSplitFlag"));
+        // 20221004 調整將資料拆成多個檔案 By Kelton end
 
         JobDataMap jobDataMap = context.JobDetail.JobDataMap;
         strMail = jobDataMap.GetString("mail").Trim();
@@ -130,180 +136,416 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                 return;
             }
 
-            #region 下載檔案
-            JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載開始", date), LogState.Info);
+            // 20221004 調整將資料拆成多個檔案 By Kelton start
+            if (!OS06FileSplitFlag)
+            {
+                #region 下載檔案
+                JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載開始", date), LogState.Info);
 
-            exeFileName = DownloadFile(jobID, atDailyJob, date, ref localPath, ref unZipPwd, ref errorMsg);
-            if (!string.IsNullOrEmpty(errorMsg) || string.IsNullOrEmpty(exeFileName))
-            {
-                JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [失敗]", date), LogState.Error);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [成功]", date), LogState.Info);
-            }
-            #endregion
-
-            #region 解壓縮檔案
-            Thread.Sleep(5000);
-            JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮開始", exeFileName), LogState.Info);
-
-            isUnzip = atDailyJob.ZipExeFile(localPath, exeFileName, unZipPwd, ref errorMsg);
-            if (!string.IsNullOrEmpty(errorMsg) || !isUnzip)
-            {
-                JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮 [失敗]", exeFileName), LogState.Error);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮 [成功]", exeFileName), LogState.Info);
-            }
-            #endregion
-
-            #region 檢查import_log是否有匯入紀錄, 若無則新增資料
-            JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 開始", LogState.Info);
-
-            bool insertImportLogStatus = atDailyJob.CheckImportLog(date, exeFileName, ref errorMsg);
-            if (!string.IsNullOrEmpty(errorMsg) || !insertImportLogStatus)
-            {
-                JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [失敗]", LogState.Error);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [成功]", LogState.Info);
-            }
-            #endregion
-
-            #region truncate table[cpmast_tmp]
-            truncateTable = "CPMAST_TMP";
-            JobHelper.SaveLog(string.Format("Truncate Table：{0} 開始！", truncateTable), LogState.Info);
-            truncateStatus = atDailyJob.TruncateTable(truncateTable, ref errorMsg);
-            if (!string.IsNullOrEmpty(errorMsg) || !truncateStatus)
-            {
-                JobHelper.SaveLog(string.Format("Truncate Table：{0} [失敗]！", truncateTable), LogState.Error);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog(string.Format("Truncate Table：{0} [成功]！", truncateTable), LogState.Info);
-            }
-            #endregion
-
-            #region 將資料匯入table[cpmast_tmp]
-            JobHelper.SaveLog(string.Format("讀取 OS06{0}.dat 開始", date), LogState.Info);
-            //讀檔
-            DataTable datTable = atDailyJob.GetMaintainData(localPath, ref datFileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
-            if (datTable == null && string.IsNullOrEmpty(errorMsg))
-            {
-                errorMsg = string.Format("讀取 OS06{0}.dat 時發生錯誤，請確認", date);
-            }
-
-            if (!string.IsNullOrEmpty(errorMsg))
-            {
-                JobHelper.SaveLog(string.Format("讀取 {0} [失敗]", datFileName), LogState.Error);
-                return;
-            }
-
-            if (datTable.Rows.Count <= 0)
-            {
-                errorMsg = string.Format("{0} 檔沒有資料", datFileName);
-                JobHelper.SaveLog(string.Format("檔案 {0} 沒有資料", datFileName), LogState.Info);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog(string.Format("讀取 {0} [成功]", datFileName), LogState.Info);
-            }
-
-            //匯入資料至table[cpmast_tmp]
-            JobHelper.SaveLog("匯入資料至 CPMAST_TMP 開始", LogState.Info);
-
-            bool insertStatus = atDailyJob.InsertCpmastTmp("CPMAST_TMP", datTable, ref errorMsg);
-            if (!insertStatus && string.IsNullOrEmpty(errorMsg))
-            {
-                errorMsg = "匯入資料至 CPMAST_TMP 時發生錯誤，請確認";
-            }
-
-            if (!string.IsNullOrEmpty(errorMsg))
-            {
-                JobHelper.SaveLog("匯入資料至 CPMAST_TMP [失敗]！", LogState.Error);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog("匯入資料至 CPMAST_TMP [成功]！", LogState.Info);
-            }
-            #endregion
-
-            #region 檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料
-
-            JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 開始", LogState.Info);
-            bool checkCpmastTmpResult = atDailyJob.CheckCpmastTmp(exeFileName, ref errorDataCount, ref errorMsg);
-            if (!checkCpmastTmpResult && string.IsNullOrEmpty(errorMsg))
-            {
-                errorMsg = "檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料時發生錯誤，請確認";
-            }
-            if (!string.IsNullOrEmpty(errorMsg))
-            {
-                JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 [失敗]！", LogState.Error);
-                return;
-            }
-            else
-            {
-                if (errorDataCount <= 0)
+                exeFileName = DownloadFile(jobID, atDailyJob, date, ref localPath, ref unZipPwd, ref errorMsg);
+                if (!string.IsNullOrEmpty(errorMsg) || string.IsNullOrEmpty(exeFileName))
                 {
-                    JobHelper.SaveLog("table[cpmast_tmp] 無日期格式錯誤資料", LogState.Info);
+                    JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [失敗]", date), LogState.Error);
+                    return;
                 }
                 else
                 {
-                    //若有日期格式錯誤的資料，Log層級改為Error by Ares Stanley 20220505
-                    JobHelper.SaveLog(string.Format("table[cpmast_tmp] 有日期格式錯誤資料，共 {0} 筆", errorDataCount), LogState.Error);
+                    JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [成功]", date), LogState.Info);
                 }
-                JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 [成功]！", LogState.Info);
-            }
-            #endregion
+                #endregion
 
-            #region 確認暫存檔資料筆數不為0，轉換table[cpmast_tmp]日期格式
-            JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 開始！", LogState.Info);
-            bool convertStatus = atDailyJob.ConvertCpmastTmpData(ref correctDataCount, ref errorMsg);
-            if (!string.IsNullOrEmpty(errorMsg))
-            {
-                JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 [失敗]！", LogState.Error);
-                return;
+                #region 解壓縮檔案
+                Thread.Sleep(5000);
+                JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮開始", exeFileName), LogState.Info);
+
+                isUnzip = atDailyJob.ZipExeFile(localPath, exeFileName, unZipPwd, ref errorMsg);
+                if (!string.IsNullOrEmpty(errorMsg) || !isUnzip)
+                {
+                    JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮 [失敗]", exeFileName), LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮 [成功]", exeFileName), LogState.Info);
+                }
+                #endregion
+
+                #region 檢查import_log是否有匯入紀錄, 若無則新增資料
+                JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 開始", LogState.Info);
+
+                bool insertImportLogStatus = atDailyJob.CheckImportLog(date, exeFileName, ref errorMsg);
+                if (!string.IsNullOrEmpty(errorMsg) || !insertImportLogStatus)
+                {
+                    JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [失敗]", LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [成功]", LogState.Info);
+                }
+                #endregion
+
+                #region truncate table[cpmast_tmp]
+                truncateTable = "CPMAST_TMP";
+                JobHelper.SaveLog(string.Format("Truncate Table：{0} 開始！", truncateTable), LogState.Info);
+                truncateStatus = atDailyJob.TruncateTable(truncateTable, ref errorMsg);
+                if (!string.IsNullOrEmpty(errorMsg) || !truncateStatus)
+                {
+                    JobHelper.SaveLog(string.Format("Truncate Table：{0} [失敗]！", truncateTable), LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog(string.Format("Truncate Table：{0} [成功]！", truncateTable), LogState.Info);
+                }
+                #endregion
+
+                #region 將資料匯入table[cpmast_tmp]
+                JobHelper.SaveLog(string.Format("讀取 OS06{0}.dat 開始", date), LogState.Info);
+                //讀檔
+                DataTable datTable = atDailyJob.GetMaintainData(localPath, ref datFileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
+                if (datTable == null && string.IsNullOrEmpty(errorMsg))
+                {
+                    errorMsg = string.Format("讀取 OS06{0}.dat 時發生錯誤，請確認", date);
+                }
+
+                if (!string.IsNullOrEmpty(errorMsg))
+                {
+                    JobHelper.SaveLog(string.Format("讀取 {0} [失敗]", datFileName), LogState.Error);
+                    return;
+                }
+
+                if (datTable.Rows.Count <= 0)
+                {
+                    errorMsg = string.Format("{0} 檔沒有資料", datFileName);
+                    JobHelper.SaveLog(string.Format("檔案 {0} 沒有資料", datFileName), LogState.Info);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog(string.Format("讀取 {0} [成功]", datFileName), LogState.Info);
+                }
+
+                //匯入資料至table[cpmast_tmp]
+                JobHelper.SaveLog("匯入資料至 CPMAST_TMP 開始", LogState.Info);
+
+                bool insertStatus = atDailyJob.InsertCpmastTmp("CPMAST_TMP", datTable, ref errorMsg);
+                if (!insertStatus && string.IsNullOrEmpty(errorMsg))
+                {
+                    errorMsg = "匯入資料至 CPMAST_TMP 時發生錯誤，請確認";
+                }
+
+                if (!string.IsNullOrEmpty(errorMsg))
+                {
+                    JobHelper.SaveLog("匯入資料至 CPMAST_TMP [失敗]！", LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog("匯入資料至 CPMAST_TMP [成功]！", LogState.Info);
+                }
+                #endregion
+
+                #region 檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料
+
+                JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 開始", LogState.Info);
+                bool checkCpmastTmpResult = atDailyJob.CheckCpmastTmp(exeFileName, ref errorDataCount, ref errorMsg);
+                if (!checkCpmastTmpResult && string.IsNullOrEmpty(errorMsg))
+                {
+                    errorMsg = "檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料時發生錯誤，請確認";
+                }
+                if (!string.IsNullOrEmpty(errorMsg))
+                {
+                    JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 [失敗]！", LogState.Error);
+                    return;
+                }
+                else
+                {
+                    if (errorDataCount <= 0)
+                    {
+                        JobHelper.SaveLog("table[cpmast_tmp] 無日期格式錯誤資料", LogState.Info);
+                    }
+                    else
+                    {
+                        //若有日期格式錯誤的資料，Log層級改為Error by Ares Stanley 20220505
+                        JobHelper.SaveLog(string.Format("table[cpmast_tmp] 有日期格式錯誤資料，共 {0} 筆", errorDataCount), LogState.Error);
+                    }
+                    JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 [成功]！", LogState.Info);
+                }
+                #endregion
+
+                #region 確認暫存檔資料筆數不為0，轉換table[cpmast_tmp]日期格式
+                JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 開始！", LogState.Info);
+                bool convertStatus = atDailyJob.ConvertCpmastTmpData(ref correctDataCount, ref errorMsg);
+                if (!string.IsNullOrEmpty(errorMsg))
+                {
+                    JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 [失敗]！", LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 [成功]！", LogState.Info);
+                }
+                #endregion
+
+                #region 將table[cpmast_tmp]資料匯入table[cpmast]
+                JobHelper.SaveLog("將正確資料寫入table[cpmast] 開始！", LogState.Info);
+                bool insertCpmastStatus = atDailyJob.InsertCorrectDataToCpmast(exeFileName, ref errorMsg);
+                if (!string.IsNullOrEmpty(errorMsg))
+                {
+                    JobHelper.SaveLog("將正確資料寫入table[cpmast] [失敗]！", LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog("將正確資料寫入table[cpmast] [成功]！", LogState.Info);
+                }
+                #endregion
+
+                //若有匯入失敗或檢核失敗資料則 Log 層級為 Error By Ares Stanley 20220505
+                if (errorDataCount > 0 || this.datErrorDataCount > 0)
+                {
+                    //有匯入失敗或檢核失敗資料
+                    JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Error);
+                }
+                else
+                {
+                    //無匯入失敗或檢核失敗資料
+                    JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Info);
+                }
             }
             else
             {
-                JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 [成功]！", LogState.Info);
-            }
-            #endregion
+                #region 下載檔案
+                JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載開始", date), LogState.Info);
 
-            #region 將table[cpmast_tmp]資料匯入table[cpmast]
-            JobHelper.SaveLog("將正確資料寫入table[cpmast] 開始！", LogState.Info);
-            bool insertCpmastStatus = atDailyJob.InsertCorrectDataToCpmast(exeFileName, ref errorMsg);
-            if (!string.IsNullOrEmpty(errorMsg))
-            {
-                JobHelper.SaveLog("將正確資料寫入table[cpmast] [失敗]！", LogState.Error);
-                return;
-            }
-            else
-            {
-                JobHelper.SaveLog("將正確資料寫入table[cpmast] [成功]！", LogState.Info);
-            }
-            #endregion
+                int fileOKDataCount = 0;
+                List<string> exeFileNames = DownloadFiles(jobID, atDailyJob, date, ref localPath, ref unZipPwd, ref errorMsg, ref fileOKDataCount);
+                if (!string.IsNullOrEmpty(errorMsg) || exeFileNames == null)
+                {
+                    JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [失敗]", date), LogState.Error);
+                    return;
+                }
+                else
+                {
+                    JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [成功]", date), LogState.Info);
+                }
+                #endregion
+                int totalDatDataCount = 0;
+                foreach (var fileName in exeFileNames)
+                {
+                    #region 解壓縮檔案
+                    Thread.Sleep(5000);
 
-            //若有匯入失敗或檢核失敗資料則 Log 層級為 Error By Ares Stanley 20220505
-            if (errorDataCount > 0 || this.datErrorDataCount > 0)
-            {
-                //有匯入失敗或檢核失敗資料
-                JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Error);
+                    JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮開始", fileName), LogState.Info);
+
+                    isUnzip = atDailyJob.ZipExeFile(localPath, fileName, unZipPwd, ref errorMsg);
+                    if (!string.IsNullOrEmpty(errorMsg) || !isUnzip)
+                    {
+                        JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮 [失敗]", fileName), LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog(string.Format("檔案 {0} 解壓縮 [成功]", fileName), LogState.Info);
+                    }
+                    #endregion
+
+                    #region 檢查檔案內容筆數是否和 FILEOK 的筆數相同
+                    JobHelper.SaveLog(string.Format("讀取 {0}.dat 開始", fileName.Substring(0, fileName.Length - 4)), LogState.Info);
+                    //讀檔
+                    DataTable datTable = atDailyJob.GetMaintainDataByFileName(localPath, fileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
+                    if (datTable == null && string.IsNullOrEmpty(errorMsg))
+                    {
+                        errorMsg = string.Format("讀取 {0}.dat 時發生錯誤，請確認", fileName.Substring(0, fileName.Length - 4));
+                    }
+
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        JobHelper.SaveLog(string.Format("讀取 {0} [失敗]", datFileName), LogState.Error);
+                        return;
+                    }
+
+                    if (datTable.Rows.Count <= 0)
+                    {
+                        errorMsg = string.Format("{0} 檔沒有資料", datFileName);
+                        JobHelper.SaveLog(string.Format("檔案 {0} 沒有資料", datFileName), LogState.Info);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog(string.Format("讀取 {0} [成功]", datFileName), LogState.Info);
+                    }
+
+                    totalDatDataCount += datTable.Rows.Count;
+                    #endregion
+                }
+
+                if (fileOKDataCount != totalDatDataCount)
+                {
+                    errorMsg = ".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同";
+                    JobHelper.SaveLog(".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同", LogState.Error);
+                    return;
+                }
+
+                foreach (var fileName in exeFileNames)
+                {
+                    #region 檢查import_log是否有匯入紀錄, 若無則新增資料
+                    JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 開始", LogState.Info);
+
+                    bool insertImportLogStatus = atDailyJob.CheckImportLog(date, fileName, ref errorMsg);
+                    if (!string.IsNullOrEmpty(errorMsg) || !insertImportLogStatus)
+                    {
+                        JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [失敗]", LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [成功]", LogState.Info);
+                    }
+                    #endregion
+
+                    #region truncate table[cpmast_tmp]
+                    truncateTable = "CPMAST_TMP";
+                    JobHelper.SaveLog(string.Format("Truncate Table：{0} 開始！", truncateTable), LogState.Info);
+                    truncateStatus = atDailyJob.TruncateTable(truncateTable, ref errorMsg);
+                    if (!string.IsNullOrEmpty(errorMsg) || !truncateStatus)
+                    {
+                        JobHelper.SaveLog(string.Format("Truncate Table：{0} [失敗]！", truncateTable), LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog(string.Format("Truncate Table：{0} [成功]！", truncateTable), LogState.Info);
+                    }
+                    #endregion
+
+                    #region 將資料匯入table[cpmast_tmp]
+                    JobHelper.SaveLog(string.Format("讀取 {0}.dat 開始", fileName.Substring(0, fileName.Length - 4)), LogState.Info);
+                    //讀檔
+                    DataTable datTable = atDailyJob.GetMaintainDataByFileName(localPath, fileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
+                    if (datTable == null && string.IsNullOrEmpty(errorMsg))
+                    {
+                        errorMsg = string.Format("讀取 {0}.dat 時發生錯誤，請確認", fileName.Substring(0, fileName.Length - 4));
+                    }
+
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        JobHelper.SaveLog(string.Format("讀取 {0} [失敗]", datFileName), LogState.Error);
+                        return;
+                    }
+
+                    if (datTable.Rows.Count <= 0)
+                    {
+                        errorMsg = string.Format("{0} 檔沒有資料", datFileName);
+                        JobHelper.SaveLog(string.Format("檔案 {0} 沒有資料", datFileName), LogState.Info);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog(string.Format("讀取 {0} [成功]", datFileName), LogState.Info);
+                    }
+
+                    //匯入資料至table[cpmast_tmp]
+                    JobHelper.SaveLog("匯入資料至 CPMAST_TMP 開始", LogState.Info);
+
+                    bool insertStatus = atDailyJob.InsertCpmastTmp("CPMAST_TMP", datTable, ref errorMsg);
+                    if (!insertStatus && string.IsNullOrEmpty(errorMsg))
+                    {
+                        errorMsg = "匯入資料至 CPMAST_TMP 時發生錯誤，請確認";
+                    }
+
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        JobHelper.SaveLog("匯入資料至 CPMAST_TMP [失敗]！", LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog("匯入資料至 CPMAST_TMP [成功]！", LogState.Info);
+                    }
+                    #endregion
+
+                    #region 檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料
+
+                    JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 開始", LogState.Info);
+                    bool checkCpmastTmpResult = atDailyJob.CheckCpmastTmp(fileName, ref errorDataCount, ref errorMsg);
+                    if (!checkCpmastTmpResult && string.IsNullOrEmpty(errorMsg))
+                    {
+                        errorMsg = "檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料時發生錯誤，請確認";
+                    }
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 [失敗]！", LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        if (errorDataCount <= 0)
+                        {
+                            JobHelper.SaveLog("table[cpmast_tmp] 無日期格式錯誤資料", LogState.Info);
+                        }
+                        else
+                        {
+                            //若有日期格式錯誤的資料，Log層級改為Error
+                            JobHelper.SaveLog(string.Format("table[cpmast_tmp] 有日期格式錯誤資料，共 {0} 筆", errorDataCount), LogState.Error);
+                        }
+                        JobHelper.SaveLog("檢核table[cpmast_tmp]資料日期格式是否正確，若有錯誤則將錯誤資料另存至cpmast_Err，並從cpmast_tmp刪除錯誤資料 [成功]！", LogState.Info);
+                    }
+                    #endregion
+
+                    #region 確認暫存檔資料筆數不為0，轉換table[cpmast_tmp]日期格式
+                    JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 開始！", LogState.Info);
+                    bool convertStatus = atDailyJob.ConvertCpmastTmpData(ref correctDataCount, ref errorMsg);
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 [失敗]！", LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog("轉換table[cpmast_tmp]資料日期格式 [成功]！", LogState.Info);
+                    }
+                    #endregion
+
+                    #region 將table[cpmast_tmp]資料匯入table[cpmast]
+                    JobHelper.SaveLog("將正確資料寫入table[cpmast] 開始！", LogState.Info);
+                    bool insertCpmastStatus = atDailyJob.InsertCorrectDataToCpmast(fileName, ref errorMsg);
+                    if (!string.IsNullOrEmpty(errorMsg))
+                    {
+                        JobHelper.SaveLog("將正確資料寫入table[cpmast] [失敗]！", LogState.Error);
+                        return;
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog("將正確資料寫入table[cpmast] [成功]！", LogState.Info);
+                    }
+                    #endregion
+
+                    // 紀錄 dat 匯入情況
+                    datInfos.Add(new datInfo
+                    {
+                        FILE_NAME = fileName,
+                        DatDataCount = this.datDataCount,
+                        CorrectDataCount = correctDataCount,
+                        ErrorDataCount = errorDataCount,
+                        DatErrorDataCount = this.datErrorDataCount
+                    });
+
+                    //若有匯入失敗或檢核失敗資料則 Log 層級為 Error
+                    if (errorDataCount > 0 || this.datErrorDataCount > 0)
+                    {
+                        //有匯入失敗或檢核失敗資料
+                        JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", fileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Error);
+                    }
+                    else
+                    {
+                        //無匯入失敗或檢核失敗資料
+                        JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", fileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Info);
+                    }
+                }
             }
-            else
-            {
-                //無匯入失敗或檢核失敗資料
-                JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Info);
-            }
+            // 20221004 調整將資料拆成多個檔案 By Kelton end
         }
         catch (Exception ex)
         {
@@ -314,18 +556,42 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
         }
         finally
         {
-            #region 檢查成功、失敗筆數, 更新table[import_log]
-            JobHelper.SaveLog("更新table[Import_Log] 開始！", LogState.Info);
-            bool updateStatus = atDailyJob.UpdateImportLog(correctDataCount, errorDataCount, this.datErrorDataCount, date, ref errorMsg);
-            if (!updateStatus)
+            // 20221004 調整將資料拆成多個檔案 By Kelton start
+            if (!OS06FileSplitFlag)
             {
-                JobHelper.SaveLog("更新table[Import_Log] [失敗]！", LogState.Error);
+                #region 檢查成功、失敗筆數, 更新table[import_log]
+                JobHelper.SaveLog("更新table[Import_Log] 開始！", LogState.Info);
+                bool updateStatus = atDailyJob.UpdateImportLog(correctDataCount, errorDataCount, this.datErrorDataCount, date, ref errorMsg);
+                if (!updateStatus)
+                {
+                    JobHelper.SaveLog("更新table[Import_Log] [失敗]！", LogState.Error);
+                }
+                else
+                {
+                    JobHelper.SaveLog("更新table[Import_Log] [成功]！", LogState.Info);
+                }
+                #endregion
             }
             else
             {
-                JobHelper.SaveLog("更新table[Import_Log] [成功]！", LogState.Info);
+                foreach (var datInfo in datInfos)
+                {
+                    #region 檢查成功、失敗筆數, 更新table[import_log]
+                    JobHelper.SaveLog("更新table[Import_Log] 開始！", LogState.Info);
+                    bool updateStatus = atDailyJob.UpdateImportLogByFileName(datInfo.CorrectDataCount, datInfo.ErrorDataCount, datInfo.DatErrorDataCount, date, datInfo.FILE_NAME, ref errorMsg);
+                    if (!updateStatus)
+                    {
+                        JobHelper.SaveLog(string.Format("更新 table[Import_Log] [失敗] 檔案：{0}！", datInfo.FILE_NAME), LogState.Error);
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog(string.Format("更新 table[Import_Log] [成功] 檔案：{0}！", datInfo.FILE_NAME), LogState.Info);
+                    }
+                    #endregion
+                }
             }
-            #endregion
+            // 20221004 調整將資料拆成多個檔案 By Kelton End
+
 
             //清空手動輸入參數
             if (BRM_FileInfo.UpdateParam(jobID, ""))
@@ -339,29 +605,72 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
 
             }
 
-            if (string.IsNullOrEmpty(errorMsg))
+            // 20221004 調整將資料拆成多個檔案 By Kelton start
+            if (!OS06FileSplitFlag)
             {
-                //更新L_BATCH_LOG
-                InsertBatchLog(jobID, "S", string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount));
-
-                //若有匯入失敗或檢核失敗的資料，額外新增一筆L_Batch_Log by Ares Stanley 20220505
-                if (errorDataCount > 0 || this.datErrorDataCount > 0)
+                if (string.IsNullOrEmpty(errorMsg))
                 {
-                    InsertBatchLog(jobID, "F", string.Format("檔案：{0} 匯入結束，匯入失敗資料共 {1} 筆，檢核失敗資料共 {2} 筆", exeFileName, errorDataCount, this.datErrorDataCount));
-                }
+                    //更新L_BATCH_LOG
+                    InsertBatchLog(jobID, "S", string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount));
 
-                string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {0} 筆，匯入成功 {1} 筆，匯入失敗 {2} 筆，檢核失敗 {3} 筆", this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount);
-                //寄成功信
-                SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
+                    //若有匯入失敗或檢核失敗的資料，額外新增一筆L_Batch_Log by Ares Stanley 20220505
+                    if (errorDataCount > 0 || this.datErrorDataCount > 0)
+                    {
+                        InsertBatchLog(jobID, "F", string.Format("檔案：{0} 匯入結束，匯入失敗資料共 {1} 筆，檢核失敗資料共 {2} 筆", exeFileName, errorDataCount, this.datErrorDataCount));
+                    }
+
+                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {0} 筆，匯入成功 {1} 筆，匯入失敗 {2} 筆，檢核失敗 {3} 筆", this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount);
+                    //寄成功信
+                    SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
+                }
+                else
+                {
+                    //更新L_BATCH_LOG
+                    InsertBatchLog(JobHelper.strJobID, "F", errorMsg);
+
+                    //寄失敗信
+                    SendMail(_MailTitle + "失敗！" + errorMsg, string.Format(" JobOS06_AtDailyJob 批次 發生錯誤：{0}", errorMsg), "失敗", this.StartTime);
+                }
             }
             else
             {
-                //更新L_BATCH_LOG
-                InsertBatchLog(JobHelper.strJobID, "F", errorMsg);
+                if (string.IsNullOrEmpty(errorMsg))
+                {
+                    int totalDataCount = 0;
+                    int totalCorrectDataCount = 0;
+                    int totalErrorDataCount = 0;
+                    int totalDatErrorDataCount = 0;
+                    foreach (var datInfo in datInfos)
+                    {
+                        //更新L_BATCH_LOG
+                        InsertBatchLog(jobID, "S", string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", datInfo.FILE_NAME, datInfo.DatDataCount, datInfo.CorrectDataCount, datInfo.ErrorDataCount, datInfo.DatErrorDataCount));
 
-                //寄失敗信
-                SendMail(_MailTitle + "失敗！" + errorMsg, string.Format(" JobOS06_AtDailyJob 批次 發生錯誤：{0}", errorMsg), "失敗", this.StartTime);
+                        //若有匯入失敗或檢核失敗的資料，額外新增一筆L_Batch_Log
+                        if (datInfo.ErrorDataCount > 0 || datInfo.DatErrorDataCount > 0)
+                        {
+                            InsertBatchLog(jobID, "F", string.Format("檔案：{0} 匯入結束，匯入失敗資料共 {1} 筆，檢核失敗資料共 {2} 筆", datInfo.FILE_NAME, datInfo.ErrorDataCount, datInfo.DatErrorDataCount));
+                        }
+                        totalDataCount += datInfo.DatDataCount;
+                        totalCorrectDataCount += datInfo.CorrectDataCount;
+                        totalErrorDataCount += datInfo.ErrorDataCount;
+                        totalDatErrorDataCount += datInfo.DatErrorDataCount;
+                    }
+
+                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {0} 筆，匯入成功 {1} 筆，匯入失敗 {2} 筆，檢核失敗 {3} 筆", totalDataCount, totalCorrectDataCount, totalErrorDataCount, totalDatErrorDataCount);
+                    //寄成功信
+                    SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
+                }
+                else
+                {
+                    //更新L_BATCH_LOG
+                    InsertBatchLog(JobHelper.strJobID, "F", errorMsg);
+
+                    //寄失敗信
+                    SendMail(_MailTitle + "失敗！" + errorMsg, string.Format(" JobOS06_AtDailyJob 批次 發生錯誤：{0}", errorMsg), "失敗", this.StartTime);
+                }
             }
+            // 20221004 調整將資料拆成多個檔案 By Kelton End
+
 
             JobHelper.SaveLog("*********** " + JobHelper.strJobID + " 取得CPMAST資料 批次 END ************** ", LogState.Info);
         }
@@ -411,6 +720,51 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
     }
 
     /// <summary>
+    /// 功能說明:下載多個檔案
+    /// 作    者:Kelton
+    /// 創建時間:2022/10/04
+    /// 修改時間:
+    /// </summary>
+    /// <param name="jobID">jobID</param>
+    /// <param name="atDailyJob"></param>
+    /// <param name="date">執行日期</param>
+    /// <param name="localPath">本地路徑</param>
+    /// <param name="unZipPwd">解壓縮密碼</param>
+    /// <param name="errorMsg">錯誤訊息</param>
+    /// <returns></returns>
+    private List<string> DownloadFiles(string jobID, OS06_AtDailyJob atDailyJob, string date, ref string localPath, ref string unZipPwd, ref string errorMsg, ref int fileOKDataCount)
+    {
+        string folderName = string.Empty;
+        string ErrorChi = string.Empty;
+        bool isDownloadOK = false;
+
+        try
+        {
+            JobHelper.CreateFolderName(jobID, ref folderName);
+
+            localPath = AppDomain.CurrentDomain.BaseDirectory + "FileDownload\\" + jobID + "\\" + folderName + "\\";
+
+            List<string> fileNames = atDailyJob.DownloadFromFTP_Multiple(date, localPath, "EXE", ref isDownloadOK, ref unZipPwd, ref errorMsg, ref fileOKDataCount);
+
+            if (!isDownloadOK && string.IsNullOrEmpty(errorMsg))
+            {
+                errorMsg = "檔案下載失敗！";
+                return null;
+            }
+
+            return fileNames;
+        }
+        catch (Exception ex)
+        {
+            Logging.Log(ex);
+            JobHelper.SaveLog("檔案下載發生例外錯誤：" + ex.Message);
+            errorMsg = "檔案下載發生例外錯誤";
+            return null;
+        }
+
+    }
+
+    /// <summary>
     /// 取得使用者資訊
     /// </summary>
     /// <param name="jobDataMap">批次參數</param>
@@ -428,6 +782,8 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                 eAgentInfo.agent_id_racf = jobDataMap.GetString("racfId");
                 eAgentInfo.agent_id_racf_pwd = jobDataMap.GetString("racfPassWord");
             }
+
+            eAgentInfo.functionkey = FunctionKey;
 
             return eAgentInfo;
         }
@@ -555,4 +911,72 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
         }
     }
     #endregion
+
+    /// <summary>
+    ///  紀錄 dat 匯入情況 by Kelton
+    /// </summary>
+    public class datInfo
+    {
+        private string _FILE_NAME;
+        private int _DatDataCount;
+        private int _CorrectDataCount;
+        private int _ErrorDataCount;
+        private int _DatErrorDataCount;
+        public string FILE_NAME
+        {
+            get
+            {
+                return this._FILE_NAME;
+            }
+            set
+            {
+                this._FILE_NAME = value;
+            }
+        }
+
+        public int DatDataCount
+        {
+            get
+            {
+                return this._DatDataCount;
+            }
+            set
+            {
+                this._DatDataCount = value;
+            }
+        }
+        public int CorrectDataCount
+        {
+            get
+            {
+                return this._CorrectDataCount;
+            }
+            set
+            {
+                this._CorrectDataCount = value;
+            }
+        }
+        public int ErrorDataCount
+        {
+            get
+            {
+                return this._ErrorDataCount;
+            }
+            set
+            {
+                this._ErrorDataCount = value;
+            }
+        }
+        public int DatErrorDataCount
+        {
+            get
+            {
+                return this._DatErrorDataCount;
+            }
+            set
+            {
+                this._DatErrorDataCount = value;
+            }
+        }
+    }
 }

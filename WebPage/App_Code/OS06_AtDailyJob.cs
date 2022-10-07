@@ -18,6 +18,10 @@ using Framework.Common.Logging;
 using Framework.Common.Utility;
 using Framework.Data;
 using CSIPCommonModel.EntityLayer;
+using System.Collections.Generic;
+using CSIPCommonModel.BusinessRules;
+using Framework.Data.OM.Collections;
+using Framework.Data.OM;
 
 /// <summary>
 /// OS06_AtDailyJob 的摘要描述
@@ -113,6 +117,190 @@ public class OS06_AtDailyJob
         }
 
         return fileName;
+    }
+
+    /// <summary>
+    /// 功能說明:從FTP下載多個檔案
+    /// 作    者:Kelton
+    /// 創建時間:2022/10/04
+    /// 修改時間:
+    /// </summary>
+    /// <param name="date">檔案日期</param>
+    /// <param name="localPath">本地路徑</param>
+    /// <param name="extension">副檔名</param>
+    /// <param name="isDownload">是否下載成功</param>
+    /// <returns></returns>
+    public List<string> DownloadFromFTP_Multiple(string date, string localPath, string extension, ref bool isDownload, ref string unZipPwd, ref string errorMsg, ref int fileOKDataCount)
+    {
+        List<string> fileNames = new List<string>();
+        string fileName = string.Empty;
+        try
+        {
+            DataTable tblFileInfo = new DataTable();
+
+            if (!CSIPCardMaintain.BusinessRules.BRM_FileInfo.GetFTPFileInfo(this.jobID, ref tblFileInfo))
+            {
+                isDownload = false;
+                errorMsg = "取得 JOB tblFileInfo 相關資料失敗，請確認 JobLog(Log\\JobOS06_AtDailyJob\\) 或 DefaultLog(Log\\Default\\)";
+                return null;
+            }
+
+            if (tblFileInfo.Rows.Count <= 0)
+            {
+                isDownload = false;
+                errorMsg = "JOB tblFileInfo 沒有資料";
+                return null;
+            }
+
+            #region rerun mechanism
+            if (!string.IsNullOrEmpty(tblFileInfo.Rows[0]["Parameter"].ToString()))
+            {
+                date = tblFileInfo.Rows[0]["Parameter"].ToString().Trim();
+            }
+            #endregion
+
+            string remFileName = string.Format("OS06{0}.FILEOK", date);
+            unZipPwd = RedirectHelper.GetDecryptString(tblFileInfo.Rows[0]["ZipPwd"].ToString());//待確認
+            string ftpPwd = RedirectHelper.GetDecryptString(tblFileInfo.Rows[0]["FtpPwd"].ToString());
+            FTPFactory objFtp = new FTPFactory(tblFileInfo.Rows[0]["FtpIP"].ToString(), "", tblFileInfo.Rows[0]["FtpUserName"].ToString(), ftpPwd, "21", localPath, "Y");
+
+            string strReadLine = "";
+            int dataCount = 0;  // FILEOK 檔案內容紀錄的筆數
+            int fileCount = 0;  // FTP上實際應該要存在的檔案數
+            int fileMaxDataCount = int.Parse(UtilHelper.GetAppSettings("OS06FileMaxDataCount")); //單一檔案最大筆數
+            int settingfileCount = 0; // 資料庫設定可收的最大檔案數
+            int realfileCount = 0; // FTP上存在的檔案數
+            int checkSortCount = 0; //檢查檔案順序數量
+            //檢查並下載 FILEOK 檔案
+            bool returnFlag = objFtp.Download(tblFileInfo.Rows[0]["FtpPath"].ToString(), remFileName, localPath, remFileName);
+            if (!returnFlag)
+            {
+                errorMsg += "[FAIL] 檔案: " + remFileName + " FTP 取檔失敗，下載失敗";
+                return null;
+            }
+
+            StreamReader sr = new StreamReader(localPath + remFileName, System.Text.Encoding.Default);
+
+            strReadLine = sr.ReadToEnd().Trim();
+            if (strReadLine == string.Empty)
+            {
+                JobHelper.SaveLog("[FAIL] 檔案: " + remFileName + " 內容為空", LogState.Error);
+                errorMsg += "[FAIL] 檔案: " + remFileName + " 內容為空";
+                return null;
+            }
+
+            // 取得總筆數
+            dataCount = Convert.ToInt32(strReadLine);
+            fileOKDataCount = dataCount;
+
+            // 取得可收的最大檔案數資料
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.CommandType = CommandType.Text;
+            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}'", this.eAgentInfo.functionkey, this.jobID);
+            DataSet ds = BRM_PROPERTY_CODE.SearchOnDataSet(sqlcmd, "Connection_CSIP");
+
+            if (ds.Tables[0].Rows.Count <= 0 || ds.Tables[0].Rows.Count > 1)
+            {
+                JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤", LogState.Error);
+                errorMsg += "[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤";
+                return null;
+            }
+
+            settingfileCount = int.Parse(ds.Tables[0].Rows[0][0].ToString());
+
+            // 計算實際應有的檔案數
+            if (dataCount % fileMaxDataCount == 0)
+            {
+                fileCount = dataCount / fileMaxDataCount;
+            }
+            else
+            {
+                fileCount = (dataCount / fileMaxDataCount) + 1;
+            }
+
+            if (settingfileCount < fileCount)
+            {
+                JobHelper.SaveLog("[FAIL] 依資料筆數計算的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數", LogState.Error);
+                errorMsg += "[FAIL] 依資料筆數計算的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數";
+                return null;
+            }
+
+            string[] tempfileNames = Array.FindAll(objFtp.GetFileList(tblFileInfo.Rows[0]["FtpPath"].ToString()), (v) => { return v.StartsWith(string.Format("OS06{0}", date)); });
+
+            // 計算存在的檔案數量
+            foreach (var name in tempfileNames)
+            {
+                if (name.Contains(".EXE"))
+                {
+                    realfileCount++;
+                }
+            }
+
+            if (realfileCount != fileCount)
+            {
+                JobHelper.SaveLog("[FAIL] 檔案數量有誤", LogState.Error);
+                errorMsg += "[FAIL] 檔案數量有誤";
+                return null;
+            }
+
+            for (int i = 1; i <= fileCount; i++)
+            {
+                // 檢查檔案是否有跳號或缺少
+                foreach (var name in tempfileNames)
+                {
+                    if (name.Contains(".EXE") && name.Contains(string.Format("OS06{0}{1}", date, i.ToString().PadLeft(2, '0'))))
+                    {
+                        checkSortCount++;
+                    }
+                }
+            }
+
+            if (checkSortCount != fileCount)
+            {
+                JobHelper.SaveLog("[FAIL] 檔案編號順序有跳號", LogState.Error);
+                errorMsg += "[FAIL] 檔案編號順序有跳號";
+                return null;
+            }
+
+            bool isNotFound = false;
+            // 下載檔案
+            for (int i = 1; i <= fileCount; i++)
+            {
+                fileName = string.Format("OS06{0}{1}.{2}", date, i.ToString().PadLeft(2,'0'), extension);
+                isNotFound = false;
+
+                isDownload = objFtp.DownloadWithJob(tblFileInfo.Rows[0]["FtpPath"].ToString(), fileName, localPath, fileName, ref isNotFound, this.jobID);
+
+                if (isDownload)
+                {
+                    fileNames.Add(fileName);
+                }
+                else
+                {
+                    if (isNotFound)
+                    {
+                        //找不到檔案
+                        JobHelper.SaveLog("[FAIL] 檔案: " + fileName + " FTP 取檔失敗，找不到檔案", LogState.Error);
+                        errorMsg += "[FAIL] 檔案: " + fileName + " FTP 取檔失敗，找不到檔案";
+                    }
+                    else
+                    {
+                        //下載失敗
+                        JobHelper.SaveLog("[FAIL] 檔案: " + fileName + " FTP 取檔失敗，下載失敗", LogState.Error);
+                        errorMsg += "[FAIL] 檔案: " + fileName + " FTP 取檔失敗，下載失敗";
+                    }
+                    return null;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.Log(ex.Message);
+            JobHelper.SaveLog("下載檔案時發生例外錯誤：" + ex.Message);
+            errorMsg = "下載檔案時發生例外錯誤";
+        }
+
+        return fileNames;
     }
 
     /// <summary>
@@ -639,6 +827,80 @@ public class OS06_AtDailyJob
     }
 
     /// <summary>
+    /// 功能說明:更新Import_Log
+    /// 作    者:Kelton
+    /// 創建時間:2022/10/04
+    /// 修改時間:
+    /// </summary> 
+    /// <param name="correctDataCount"></param>
+    /// <param name="errorDataCount"></param>
+    /// <param name="date"></param>
+    /// <param name="fileName"></param>
+    /// <param name="errorMsg"></param>
+    /// <returns></returns>
+    public bool UpdateImportLogByFileName(int correctDataCount, int errorDataCount, int datErrorDataCount, string date, string fileName, ref string errorMsg)
+    {
+        try
+        {
+            if (correctDataCount > 0)
+            {
+                const string sqlUpdateText = @"
+                UPDATE import_log 
+                SET RecordNums = @COUNT,
+                Active_Status = '匯檔成功',
+                ErrorNums = @ErrCnt 
+                WHERE
+	                INDate = @INDate 
+	                AND FileName = @fileName
+                ";
+                SqlCommand sqlcmd = new SqlCommand();
+                sqlcmd.CommandText = sqlUpdateText;
+                sqlcmd.Parameters.Add(new SqlParameter("@COUNT", correctDataCount));
+                sqlcmd.Parameters.Add(new SqlParameter("@ErrCnt", errorDataCount + datErrorDataCount));
+                sqlcmd.Parameters.Add(new SqlParameter("@INDate", date));
+                sqlcmd.Parameters.Add(new SqlParameter("@fileName", fileName));
+                bool updateStatus = CSIPCardMaintain.BusinessRules.BRImprot_Log.Update(sqlcmd);
+                if (!updateStatus)
+                {
+                    errorMsg += "　更新table[Import_log]失敗，請確認 JobLog(Log\\JobOS06_AtDailyJob\\) 或 DefaultLog(Log\\Default\\)";
+                    return false;
+                }
+            }
+            else
+            {
+                const string sqlUpdateText = @"
+                UPDATE import_log 
+                SET RecordNums = 0,
+                Active_Status = '匯檔失敗',
+                ErrorNums = @ErrCnt
+                WHERE
+	                INDate = @INDate 
+	                AND FileName = @fileName
+                ";
+                SqlCommand sqlcmd = new SqlCommand();
+                sqlcmd.CommandText = sqlUpdateText;
+                sqlcmd.Parameters.Add(new SqlParameter("@ErrCnt", errorDataCount + datErrorDataCount));
+                sqlcmd.Parameters.Add(new SqlParameter("@INDate", date));
+                sqlcmd.Parameters.Add(new SqlParameter("@fileName", fileName));
+                bool updateStatus = CSIPCardMaintain.BusinessRules.BRImprot_Log.Update(sqlcmd);
+                if (!updateStatus)
+                {
+                    errorMsg += "　更新table[Import_log]失敗，請確認 JobLog(Log\\JobOS06_AtDailyJob\\) 或 DefaultLog(Log\\Default\\)";
+                    return false;
+                }
+            }
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Logging.Log(ex.Message);
+            JobHelper.SaveLog("更新 table[Import_Log] 時發生例外錯誤：" + ex.Message);
+            errorMsg += "　更新 table[Import_Log] 時發生例外錯誤";
+            return false;
+        }
+    }
+
+    /// <summary>
     /// 取得DAT檔資料
     /// </summary>
     /// <param name="filePath"></param>
@@ -660,6 +922,55 @@ public class OS06_AtDailyJob
                     {
                         fileName = fi.Name;
                         dt = ValidateFileLength(fi, 159, ref errorMsg, ref makeErrorFile, ref errorFilePath, ref errorDataCount, ref datDataCount);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logging.Log(ex.Message);
+                    JobHelper.SaveLog("取得DAT檔資料時發生例外錯誤：" + ex.Message);
+                    errorMsg = "取得DAT檔資料時發生例外錯誤";
+                    return null;
+                }
+            }
+            return dt;
+        }
+        catch (Exception ex)
+        {
+            Logging.Log(ex.Message);
+            JobHelper.SaveLog("取得DAT檔資料時發生例外錯誤：" + ex.Message);
+            errorMsg = "取得DAT檔資料時發生例外錯誤";
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// 功能說明:取得指定DAT檔資料
+    /// 作    者:Kelton
+    /// 創建時間:2022/10/04
+    /// 修改時間:
+    /// </summary>
+    /// <param name="filePath"></param>
+    /// <param name="fileName"></param>
+    /// <param name="errorMsg"></param>
+    /// <returns></returns>
+    public DataTable GetMaintainDataByFileName(string filePath, string fileName, ref string errorMsg, ref bool makeErrorFile, ref string errorFilePath, ref int errorDataCount, ref int datDataCount)
+    {
+        try
+        {
+            DirectoryInfo di = new DirectoryInfo(filePath);
+            DataTable dt = new DataTable();
+
+            foreach (FileInfo fi in di.GetFiles())
+            {
+                try
+                {
+                    if (fi.Extension == ".dat")
+                    {
+                        if (fi.Name.Substring(0, fi.Name.Length - 4) == fileName.Substring(0, fileName.Length - 4))
+                        {
+                            dt = ValidateFileLength(fi, 159, ref errorMsg, ref makeErrorFile, ref errorFilePath, ref errorDataCount, ref datDataCount);
+                            break;
+                        }
                     }
                 }
                 catch (Exception ex)
