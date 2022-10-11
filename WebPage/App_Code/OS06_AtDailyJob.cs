@@ -167,7 +167,7 @@ public class OS06_AtDailyJob
             string strReadLine = "";
             int dataCount = 0;  // FILEOK 檔案內容紀錄的筆數
             int fileCount = 0;  // FTP上實際應該要存在的檔案數
-            int fileMaxDataCount = int.Parse(UtilHelper.GetAppSettings("OS06FileMaxDataCount")); //單一檔案最大筆數
+            int fileMaxDataCount = 0; //單一檔案最大筆數
             int settingfileCount = 0; // 資料庫設定可收的最大檔案數
             int realfileCount = 0; // FTP上存在的檔案數
             int checkSortCount = 0; //檢查檔案順序數量
@@ -193,20 +193,45 @@ public class OS06_AtDailyJob
             dataCount = Convert.ToInt32(strReadLine);
             fileOKDataCount = dataCount;
 
-            // 取得可收的最大檔案數資料
+            // 取得設定資料
             SqlCommand sqlcmd = new SqlCommand();
             sqlcmd.CommandType = CommandType.Text;
-            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}'", this.eAgentInfo.functionkey, this.jobID);
+            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE, SEQUENCE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}'", this.eAgentInfo.functionkey, this.jobID);
             DataSet ds = BRM_PROPERTY_CODE.SearchOnDataSet(sqlcmd, "Connection_CSIP");
 
-            if (ds.Tables[0].Rows.Count <= 0 || ds.Tables[0].Rows.Count > 1)
+            if (ds != null)
             {
-                JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤", LogState.Error);
-                errorMsg += "[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤";
+                DataTable dt = ds.Tables[0];
+                // 取得可收的最大檔案數資料
+                if (dt != null && dt.Select("SEQUENCE = '1'").Length > 0)
+                {
+                    settingfileCount = int.Parse(dt.Select("SEQUENCE = '1'")[0]["PROPERTY_CODE"].ToString());
+                }
+                else
+                {
+                    JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤", LogState.Error);
+                    errorMsg += "[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤";
+                    return null;
+                }
+
+                // 取得單一檔案最大資料筆數資料
+                if (dt != null && dt.Select("SEQUENCE = '2'").Length > 0)
+                {
+                    fileMaxDataCount = int.Parse(dt.Select("SEQUENCE = '2'")[0]["PROPERTY_CODE"].ToString());
+                }
+                else
+                {
+                    JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 單一檔案最大資料筆數設定資料有誤", LogState.Error);
+                    errorMsg += "[FAIL] M_PROPERTY_CODE 單一檔案最大資料筆數設定資料有誤";
+                    return null;
+                }
+            }
+            else
+            {
+                JobHelper.SaveLog("[FAIL] 取得 M_PROPERTY_CODE 設定資料失敗", LogState.Error);
+                errorMsg += "[FAIL] 取得 M_PROPERTY_CODE 設定資料失敗";
                 return null;
             }
-
-            settingfileCount = int.Parse(ds.Tables[0].Rows[0][0].ToString());
 
             // 計算實際應有的檔案數
             if (dataCount % fileMaxDataCount == 0)
