@@ -23,6 +23,7 @@ using Framework.Common.Logging;
 using Framework.Common.Utility;
 using Framework.Common.Message;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 
 /// <summary>
 /// BatchJob_OS06_AtDailyJOB 的摘要描述
@@ -58,7 +59,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
 
         // 20221004 調整將資料拆成多個檔案 By Kelton start
         List<datInfo> datInfos = new List<datInfo>();
-        bool OS06FileSplitFlag = Convert.ToBoolean(UtilHelper.GetAppSettings("OS06FileSplitFlag"));
+        bool OS06FileSplitFlag = false;
         // 20221004 調整將資料拆成多個檔案 By Kelton end
 
         JobDataMap jobDataMap = context.JobDetail.JobDataMap;
@@ -137,6 +138,29 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
             }
 
             // 20221004 調整將資料拆成多個檔案 By Kelton start
+            // 取得資料拆檔功能開關設定資料
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.CommandType = CommandType.Text;
+            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}' AND SEQUENCE = '3'", FunctionKey, jobID);
+            DataSet ds = BRM_PROPERTY_CODE.SearchOnDataSet(sqlcmd, "Connection_CSIP");
+
+            if (ds != null)
+            {
+                DataTable dt = ds.Tables[0];
+                if (dt != null && dt.Rows.Count > 0)
+                {
+                    OS06FileSplitFlag = Convert.ToBoolean(dt.Rows[0][0].ToString());
+                }
+                else
+                {
+                    JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 查無資料拆檔功能開關設定資料", LogState.Error);
+                }
+            }
+            else
+            {
+                JobHelper.SaveLog("[FAIL] 取得 M_PROPERTY_CODE 資料拆檔功能開關設定資料失敗", LogState.Error);
+            }
+
             if (!OS06FileSplitFlag)
             {
                 #region 下載檔案
