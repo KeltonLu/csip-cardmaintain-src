@@ -172,6 +172,7 @@ public class OS06_AtDailyJob
             int realfileCount = 0; // FTP上存在的檔案數
             int checkSortCount = 0; //檢查檔案順序數量
             //檢查並下載 FILEOK 檔案
+            JobHelper.SaveLog(string.Format("檔案 {0} 下載開始", remFileName), LogState.Info);
             bool returnFlag = objFtp.Download(tblFileInfo.Rows[0]["FtpPath"].ToString(), remFileName, localPath, remFileName);
             if (!returnFlag)
             {
@@ -252,10 +253,12 @@ public class OS06_AtDailyJob
 
             string[] tempfileNames = Array.FindAll(objFtp.GetFileList(tblFileInfo.Rows[0]["FtpPath"].ToString()), (v) => { return v.StartsWith(string.Format("OS06{0}", date)); });
 
+            string[] splitstr;
             // 計算存在的檔案數量
             foreach (var name in tempfileNames)
             {
-                if (name.Contains(".EXE"))
+                splitstr = name.Split('.');
+                if (splitstr[0].Length != 12 && splitstr[1].ToUpper() == "EXE")
                 {
                     realfileCount++;
                 }
@@ -273,7 +276,8 @@ public class OS06_AtDailyJob
                 // 檢查檔案是否有跳號或缺少
                 foreach (var name in tempfileNames)
                 {
-                    if (name.Contains(".EXE") && name.Contains(string.Format("OS06{0}{1}", date, i.ToString().PadLeft(2, '0'))))
+                    splitstr = name.Split('.');
+                    if (splitstr[1].ToUpper() == "EXE" && splitstr[0] == string.Format("OS06{0}{1}", date, i.ToString().PadLeft(2, '0')))
                     {
                         checkSortCount++;
                     }
@@ -292,6 +296,7 @@ public class OS06_AtDailyJob
             for (int i = 1; i <= fileCount; i++)
             {
                 fileName = string.Format("OS06{0}{1}.{2}", date, i.ToString().PadLeft(2,'0'), extension);
+                JobHelper.SaveLog(string.Format("檔案 {0} 下載開始", fileName), LogState.Info);
                 isNotFound = false;
 
                 isDownload = objFtp.DownloadWithJob(tblFileInfo.Rows[0]["FtpPath"].ToString(), fileName, localPath, fileName, ref isNotFound, this.jobID);

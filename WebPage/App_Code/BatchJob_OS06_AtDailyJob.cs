@@ -59,7 +59,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
 
         // 20221004 調整將資料拆成多個檔案 By Kelton start
         List<datInfo> datInfos = new List<datInfo>();
-        bool OS06FileSplitFlag = false;
+        bool OS06FileSplitFlag = true;
         // 20221004 調整將資料拆成多個檔案 By Kelton end
 
         JobDataMap jobDataMap = context.JobDetail.JobDataMap;
@@ -149,7 +149,10 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                 DataTable dt = ds.Tables[0];
                 if (dt != null && dt.Rows.Count > 0)
                 {
-                    OS06FileSplitFlag = Convert.ToBoolean(dt.Rows[0][0].ToString());
+                    if (dt.Rows[0][0].ToString().ToUpper() == "N")
+                    {
+                        OS06FileSplitFlag = false;
+                    }
                 }
                 else
                 {
@@ -341,18 +344,11 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
             else
             {
                 #region 下載檔案
-                JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載開始", date), LogState.Info);
-
                 int fileOKDataCount = 0;
                 List<string> exeFileNames = DownloadFiles(jobID, atDailyJob, date, ref localPath, ref unZipPwd, ref errorMsg, ref fileOKDataCount);
                 if (!string.IsNullOrEmpty(errorMsg) || exeFileNames == null)
                 {
-                    JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [失敗]", date), LogState.Error);
                     return;
-                }
-                else
-                {
-                    JobHelper.SaveLog(string.Format("檔案 OS06{0}.EXE 下載 [成功]", date), LogState.Info);
                 }
                 #endregion
                 int totalDatDataCount = 0;
@@ -376,12 +372,13 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     #endregion
 
                     #region 檢查檔案內容筆數是否和 FILEOK 的筆數相同
-                    JobHelper.SaveLog(string.Format("讀取 {0}.dat 開始", fileName.Substring(0, fileName.Length - 4)), LogState.Info);
+                    datFileName = fileName.Substring(0, fileName.Length - 4) + ".dat";
+                    JobHelper.SaveLog(string.Format("讀取 {0} 開始", datFileName), LogState.Info);
                     //讀檔
                     DataTable datTable = atDailyJob.GetMaintainDataByFileName(localPath, fileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
                     if (datTable == null && string.IsNullOrEmpty(errorMsg))
                     {
-                        errorMsg = string.Format("讀取 {0}.dat 時發生錯誤，請確認", fileName.Substring(0, fileName.Length - 4));
+                        errorMsg = string.Format("讀取 {0} 時發生錯誤，請確認", datFileName);
                     }
 
                     if (!string.IsNullOrEmpty(errorMsg))
@@ -445,12 +442,13 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     #endregion
 
                     #region 將資料匯入table[cpmast_tmp]
-                    JobHelper.SaveLog(string.Format("讀取 {0}.dat 開始", fileName.Substring(0, fileName.Length - 4)), LogState.Info);
+                    datFileName = fileName.Substring(0, fileName.Length - 4) + ".dat";
+                    JobHelper.SaveLog(string.Format("讀取 {0} 開始", datFileName), LogState.Info);
                     //讀檔
                     DataTable datTable = atDailyJob.GetMaintainDataByFileName(localPath, fileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
                     if (datTable == null && string.IsNullOrEmpty(errorMsg))
                     {
-                        errorMsg = string.Format("讀取 {0}.dat 時發生錯誤，請確認", fileName.Substring(0, fileName.Length - 4));
+                        errorMsg = string.Format("讀取 {0} 時發生錯誤，請確認", datFileName);
                     }
 
                     if (!string.IsNullOrEmpty(errorMsg))
