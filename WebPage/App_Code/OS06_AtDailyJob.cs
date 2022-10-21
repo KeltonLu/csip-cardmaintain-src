@@ -130,10 +130,10 @@ public class OS06_AtDailyJob
     /// <param name="extension">副檔名</param>
     /// <param name="isDownload">是否下載成功</param>
     /// <returns></returns>
-    public List<string> DownloadFromFTP_Multiple(string date, string localPath, string extension, ref bool isDownload, ref string unZipPwd, ref string errorMsg, ref int fileOKDataCount)
+    public List<string> DownloadFromFTP_Multiple(string date, string localPath, string extension, ref bool isDownload, ref string unZipPwd, ref string errorMsg, ref int fileOKDataCount,
+                                                 ref int settingfileCount, ref bool doCheck)
     {
         List<string> fileNames = new List<string>();
-        string fileName = string.Empty;
         try
         {
             DataTable tblFileInfo = new DataTable();
@@ -167,135 +167,173 @@ public class OS06_AtDailyJob
             string strReadLine = "";
             int dataCount = 0;  // FILEOK 檔案內容紀錄的筆數
             int fileCount = 0;  // FTP上實際應該要存在的檔案數
-            int fileMaxDataCount = 0; //單一檔案最大筆數
-            int settingfileCount = 0; // 資料庫設定可收的最大檔案數
             int realfileCount = 0; // FTP上存在的檔案數
-            int checkSortCount = 0; //檢查檔案順序數量
-            //檢查並下載 FILEOK 檔案
-            JobHelper.SaveLog(string.Format("檔案 {0} 下載開始", remFileName), LogState.Info);
-            bool returnFlag = objFtp.Download(tblFileInfo.Rows[0]["FtpPath"].ToString(), remFileName, localPath, remFileName);
-            if (!returnFlag)
-            {
-                errorMsg += "[FAIL] 檔案: " + remFileName + " FTP 取檔失敗，下載失敗";
-                return null;
-            }
+            int fileMaxDataCount = 0; //單一檔案最大筆數
 
-            StreamReader sr = new StreamReader(localPath + remFileName, System.Text.Encoding.Default);
-
-            strReadLine = sr.ReadToEnd().Trim();
-            if (strReadLine == string.Empty)
-            {
-                JobHelper.SaveLog("[FAIL] 檔案: " + remFileName + " 內容為空", LogState.Error);
-                errorMsg += "[FAIL] 檔案: " + remFileName + " 內容為空";
-                return null;
-            }
-
-            // 取得總筆數
-            dataCount = Convert.ToInt32(strReadLine);
-            fileOKDataCount = dataCount;
-
-            // 取得設定資料
             SqlCommand sqlcmd = new SqlCommand();
             sqlcmd.CommandType = CommandType.Text;
-            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE, SEQUENCE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}'", this.eAgentInfo.functionkey, this.jobID);
+            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = 'JobOS06_Check'", this.eAgentInfo.functionkey);
             DataSet ds = BRM_PROPERTY_CODE.SearchOnDataSet(sqlcmd, "Connection_CSIP");
 
             if (ds != null)
             {
                 DataTable dt = ds.Tables[0];
-                // 取得可收的最大檔案數資料
-                if (dt != null && dt.Select("SEQUENCE = '1'").Length > 0)
+                if (dt != null && dt.Rows.Count > 0)
                 {
-                    settingfileCount = int.Parse(dt.Select("SEQUENCE = '1'")[0]["PROPERTY_CODE"].ToString());
+                    if (dt.Rows[0][0].ToString().ToUpper() == "N")
+                    {
+                        doCheck = false;
+                    }
                 }
                 else
                 {
-                    JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤", LogState.Error);
-                    errorMsg += "[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤";
-                    return null;
-                }
-
-                // 取得單一檔案最大資料筆數資料
-                if (dt != null && dt.Select("SEQUENCE = '2'").Length > 0)
-                {
-                    fileMaxDataCount = int.Parse(dt.Select("SEQUENCE = '2'")[0]["PROPERTY_CODE"].ToString());
-                }
-                else
-                {
-                    JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 單一檔案最大資料筆數設定資料有誤", LogState.Error);
-                    errorMsg += "[FAIL] M_PROPERTY_CODE 單一檔案最大資料筆數設定資料有誤";
-                    return null;
+                    JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 查無資料拆檔功能檢核開關設定資料", LogState.Error);
                 }
             }
             else
             {
                 JobHelper.SaveLog("[FAIL] 取得 M_PROPERTY_CODE 設定資料失敗", LogState.Error);
                 errorMsg += "[FAIL] 取得 M_PROPERTY_CODE 設定資料失敗";
-                return null;
-            }
-
-            // 計算實際應有的檔案數
-            if (dataCount % fileMaxDataCount == 0)
-            {
-                fileCount = dataCount / fileMaxDataCount;
-            }
-            else
-            {
-                fileCount = (dataCount / fileMaxDataCount) + 1;
-            }
-
-            if (settingfileCount < fileCount)
-            {
-                JobHelper.SaveLog("[FAIL] 依資料筆數計算的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數", LogState.Error);
-                errorMsg += "[FAIL] 依資料筆數計算的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數";
-                return null;
             }
 
             string[] tempfileNames = Array.FindAll(objFtp.GetFileList(tblFileInfo.Rows[0]["FtpPath"].ToString()), (v) => { return v.StartsWith(string.Format("OS06{0}", date)); });
 
+            List<string> realFileNames = new List<string>();
             string[] splitstr;
             // 計算存在的檔案數量
             foreach (var name in tempfileNames)
             {
                 splitstr = name.Split('.');
-                if (splitstr[0].Length != 12 && splitstr[1].ToUpper() == "EXE")
+                if (splitstr[0] != string.Format("OS06{0}", date) && splitstr[1].ToUpper() == extension)
                 {
                     realfileCount++;
+                    realFileNames.Add(name);
                 }
             }
 
-            if (realfileCount != fileCount)
+            // 判斷是否要進行相關檢核
+            if (doCheck)
             {
-                JobHelper.SaveLog("[FAIL] 檔案數量有誤", LogState.Error);
-                errorMsg += "[FAIL] 檔案數量有誤";
-                return null;
-            }
+                // 取得設定資料          
+                sqlcmd.CommandType = CommandType.Text;
+                sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE, SEQUENCE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}'", this.eAgentInfo.functionkey, this.jobID);
+                ds = BRM_PROPERTY_CODE.SearchOnDataSet(sqlcmd, "Connection_CSIP");
 
-            for (int i = 1; i <= fileCount; i++)
-            {
-                // 檢查檔案是否有跳號或缺少
-                foreach (var name in tempfileNames)
+                if (ds != null)
                 {
-                    splitstr = name.Split('.');
-                    if (splitstr[1].ToUpper() == "EXE" && splitstr[0] == string.Format("OS06{0}{1}", date, i.ToString().PadLeft(2, '0')))
+                    DataTable dt = ds.Tables[0];
+                    // 取得可收的最大檔案數資料
+                    if (dt != null && dt.Select("SEQUENCE = '1'").Length > 0)
                     {
-                        checkSortCount++;
+                        settingfileCount = int.Parse(dt.Select("SEQUENCE = '1'")[0]["PROPERTY_CODE"].ToString());
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤", LogState.Error);
+                        errorMsg += "[FAIL] M_PROPERTY_CODE 可收的最大檔案數設定資料有誤";
+                        return null;
+                    }
+
+                    // 取得單一檔案最大資料筆數資料
+                    if (dt != null && dt.Select("SEQUENCE = '2'").Length > 0)
+                    {
+                        fileMaxDataCount = int.Parse(dt.Select("SEQUENCE = '2'")[0]["PROPERTY_CODE"].ToString());
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog("[FAIL] M_PROPERTY_CODE 單一檔案最大資料筆數設定資料有誤", LogState.Error);
+                        errorMsg += "[FAIL] M_PROPERTY_CODE 單一檔案最大資料筆數設定資料有誤";
+                        return null;
+                    }
+                }
+                else
+                {
+                    JobHelper.SaveLog("[FAIL] 取得 M_PROPERTY_CODE 設定資料失敗", LogState.Error);
+                    errorMsg += "[FAIL] 取得 M_PROPERTY_CODE 設定資料失敗";
+                    return null;
+                }
+
+                //檢查並下載 FILEOK 檔案
+                JobHelper.SaveLog(string.Format("檔案 {0} 下載開始", remFileName), LogState.Info);
+                bool returnFlag = objFtp.Download(tblFileInfo.Rows[0]["FtpPath"].ToString(), remFileName, localPath, remFileName);
+                if (!returnFlag)
+                {
+                    errorMsg += "[FAIL] 檔案: " + remFileName + " FTP 取檔失敗，下載失敗";
+                    return null;
+                }
+
+                StreamReader sr = new StreamReader(localPath + remFileName, System.Text.Encoding.Default);
+
+                strReadLine = sr.ReadToEnd().Trim();
+                if (strReadLine == string.Empty)
+                {
+                    JobHelper.SaveLog("[FAIL] 檔案: " + remFileName + " 內容為空", LogState.Error);
+                    errorMsg += "[FAIL] 檔案: " + remFileName + " 內容為空";
+                    return null;
+                }
+
+                // 取得總筆數
+                dataCount = Convert.ToInt32(strReadLine);
+                fileOKDataCount = dataCount;
+
+                // 計算實際應有的檔案數
+                if (dataCount % fileMaxDataCount == 0)
+                {
+                    fileCount = dataCount / fileMaxDataCount;
+                }
+                else
+                {
+                    fileCount = (dataCount / fileMaxDataCount) + 1;
+                }
+
+                // 因目前主機端只能拆成 3 個檔案，有可能最後一個檔案的筆數會大於單一檔案最大筆數的設定值
+                // 故計算出來的檔案數量若大於可收的最大檔案數時，將計算的檔案數設成可收的最大檔案數
+                if (settingfileCount < fileCount)
+                {
+                    fileCount = settingfileCount;
+                }
+
+                if (realfileCount != fileCount)
+                {
+                    JobHelper.SaveLog("[FAIL] 檔案數量有誤", LogState.Error);
+                    errorMsg += "[FAIL] 檔案數量有誤";
+                    return null;
+                }
+
+                if (settingfileCount < realfileCount)
+                {
+                    JobHelper.SaveLog("[FAIL] 實際存在的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數", LogState.Error);
+                    errorMsg += "[FAIL] 實際存在的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數";
+                    return null;
+                }
+
+                bool havefile = false;
+                for (int i = 1; i <= fileCount; i++)
+                {
+                    havefile = false;
+                    // 檢查檔案是否有跳號或缺少
+                    foreach (var name in realFileNames)
+                    {
+                        splitstr = name.Split('.');
+                        if (splitstr[0] == string.Format("OS06{0}{1}", date, i.ToString().PadLeft(2, '0')))
+                        {
+                            havefile = true;
+                            break;
+                        }
+                    }
+                    if (!havefile)
+                    {
+                        JobHelper.SaveLog("[FAIL] 檔案編號順序有跳號", LogState.Error);
+                        errorMsg += "[FAIL] 檔案編號順序有跳號";
+                        return null;
                     }
                 }
             }
 
-            if (checkSortCount != fileCount)
-            {
-                JobHelper.SaveLog("[FAIL] 檔案編號順序有跳號", LogState.Error);
-                errorMsg += "[FAIL] 檔案編號順序有跳號";
-                return null;
-            }
-
             bool isNotFound = false;
             // 下載檔案
-            for (int i = 1; i <= fileCount; i++)
+            foreach (var fileName in realFileNames)
             {
-                fileName = string.Format("OS06{0}{1}.{2}", date, i.ToString().PadLeft(2,'0'), extension);
                 JobHelper.SaveLog(string.Format("檔案 {0} 下載開始", fileName), LogState.Info);
                 isNotFound = false;
 
@@ -463,6 +501,73 @@ public class OS06_AtDailyJob
             }
             else
             {
+                return true;
+            }
+
+            if (!isSuccess)
+            {
+                errorMsg = "INSERT Import_Log 失敗！請確認 JobLog(Log\\JobOS06_AtDailyJob\\) 或 DefaultLog(Log\\Default\\)";
+            }
+        }
+        catch (Exception ex)
+        {
+            Logging.Log(ex.Message);
+            JobHelper.SaveLog("新增 Import_Log 資料時發生例外錯誤：" + ex.Message);
+            errorMsg = "新增 Import_Log 資料時發生例外錯誤";
+            isSuccess = false;
+        }
+        return isSuccess;
+    }
+
+    /// <summary>
+    /// 功能說明:確認Import_Log是否有資料，若無則新增，檢查並回傳檔案是否已匯入
+    /// 作    者:Kelton
+    /// 創建時間:2022/10/20
+    /// 修改時間: 
+    /// </summary>
+    /// <param name="date">執行日期</param>
+    /// <param name="fileName">檔案名稱</param>
+    /// <param name="errorMsg">錯誤訊息</param>
+    /// <returns></returns>
+    public bool CheckImportLog_New(string date, string fileName, ref string errorMsg, ref bool imported)
+    {
+        bool isSuccess = false;
+        try
+        {
+            const string sqlSearchText = @"SELECT * FROM Import_Log WHERE	INDate = @INDate AND FileName = @FileName";
+            const string sqlInsertText = @"INSERT Import_Log ( INDate, FileName ) VALUES ( @INDate,@FileName )";
+
+            SqlCommand sqlcmd = new SqlCommand();
+            sqlcmd.CommandText = sqlSearchText;
+            sqlcmd.Parameters.Add(new SqlParameter("@INDate", date));
+            sqlcmd.Parameters.Add(new SqlParameter("@FileName", fileName));
+
+            DataSet ds = CSIPCardMaintain.BusinessRules.BRImprot_Log.SearchOnDataSet(sqlcmd);
+
+            if (ds == null || ds.Tables.Count <= 0)
+            {
+                errorMsg = "查詢時發生錯誤，請確認 JobLog(Log\\JobOS06_AtDailyJob\\) 或 DefaultLog(Log\\Default\\)";
+                return false;
+            }
+
+            DataTable dt = ds.Tables[0];
+
+            if (dt.Rows.Count <= 0)
+            {
+                sqlcmd = new SqlCommand();
+                sqlcmd.CommandText = sqlInsertText;
+                sqlcmd.Parameters.Add(new SqlParameter("@INDate", date));
+                sqlcmd.Parameters.Add(new SqlParameter("@FileName", fileName));
+                isSuccess = CSIPCardMaintain.BusinessRules.BRImprot_Log.Add(sqlcmd);
+            }
+            else
+            {
+                // 檢查 Log 資料是否完整，用來判斷檔案是否已匯入過
+                if (dt != null && !string.IsNullOrWhiteSpace(dt.Rows[0]["RecordNums"].ToString()) &&
+                    !string.IsNullOrWhiteSpace(dt.Rows[0]["Active_Status"].ToString()) && !string.IsNullOrWhiteSpace(dt.Rows[0]["ErrorNums"].ToString()))
+                {
+                    imported = true;
+                }
                 return true;
             }
 
@@ -736,6 +841,7 @@ public class OS06_AtDailyJob
                 errorMsg = "轉換查詢筆數時發生錯誤";
                 return false;
             }
+            // 20221020 調整將資料拆成多個檔案 By Kelton start
             const string sqlInsertText = @"
             INSERT INTO cpmast ( TYPE, CUST_ID, CARD_TYPE, FLD_NAME, BEFOR_UPD, AFTER_UPD, LST_LIMIT, CUR_LIMIT, MAINT_D, MAINT_T, USER_ID, TER_ID, EXE_Name ) 
             SELECT
@@ -751,9 +857,10 @@ public class OS06_AtDailyJob
             MAINT_T,
             USER_ID,
             '',
-            SUBSTRING ( @fileName, 1, 12 ) 
+            SUBSTRING ( @fileName, 1, CHARINDEX('.', @fileName) - 1 ) 
             FROM
 	            cpmast_tmp";
+            // 20221004 調整將資料拆成多個檔案 By Kelton end
 
             SqlCommand sqlcmd = new SqlCommand();
             sqlcmd.CommandText = sqlInsertText;

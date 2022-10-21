@@ -60,6 +60,9 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
         // 20221004 調整將資料拆成多個檔案 By Kelton start
         List<datInfo> datInfos = new List<datInfo>();
         bool OS06FileSplitFlag = true;
+        int settingfileCount = 0; // 資料庫設定可收的最大檔案數
+        bool doCheck = true; //是否進行相關檢核
+        string doingFileName = string.Empty; //目前正在處理的檔案
         // 20221004 調整將資料拆成多個檔案 By Kelton end
 
         JobDataMap jobDataMap = context.JobDetail.JobDataMap;
@@ -141,7 +144,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
             // 取得資料拆檔功能開關設定資料
             SqlCommand sqlcmd = new SqlCommand();
             sqlcmd.CommandType = CommandType.Text;
-            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}' AND SEQUENCE = '3'", FunctionKey, jobID);
+            sqlcmd.CommandText = string.Format("SELECT PROPERTY_CODE, SEQUENCE FROM M_PROPERTY_CODE WHERE FUNCTION_KEY = '{0}' AND PROPERTY_KEY = '{1}' AND SEQUENCE = '3'", FunctionKey, jobID);
             DataSet ds = BRM_PROPERTY_CODE.SearchOnDataSet(sqlcmd, "Connection_CSIP");
 
             if (ds != null)
@@ -345,7 +348,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
             {
                 #region 下載檔案
                 int fileOKDataCount = 0;
-                List<string> exeFileNames = DownloadFiles(jobID, atDailyJob, date, ref localPath, ref unZipPwd, ref errorMsg, ref fileOKDataCount);
+                List<string> exeFileNames = DownloadFiles(jobID, atDailyJob, date, ref localPath, ref unZipPwd, ref errorMsg, ref fileOKDataCount, ref settingfileCount, ref doCheck);
                 if (!string.IsNullOrEmpty(errorMsg) || exeFileNames == null)
                 {
                     return;
@@ -371,50 +374,58 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     }
                     #endregion
 
-                    #region 檢查檔案內容筆數是否和 FILEOK 的筆數相同
-                    datFileName = fileName.Substring(0, fileName.Length - 4) + ".dat";
-                    JobHelper.SaveLog(string.Format("讀取 {0} 開始", datFileName), LogState.Info);
-                    //讀檔
-                    DataTable datTable = atDailyJob.GetMaintainDataByFileName(localPath, fileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
-                    if (datTable == null && string.IsNullOrEmpty(errorMsg))
+                    if (doCheck)
                     {
-                        errorMsg = string.Format("讀取 {0} 時發生錯誤，請確認", datFileName);
-                    }
+                        #region 檢查檔案內容筆數是否和 FILEOK 的筆數相同
+                        datFileName = fileName.Substring(0, fileName.Length - 4) + ".dat";
+                        JobHelper.SaveLog(string.Format("讀取 {0} 開始", datFileName), LogState.Info);
+                        //讀檔
+                        DataTable datTable = atDailyJob.GetMaintainDataByFileName(localPath, fileName, ref errorMsg, ref this.makeErrorFile, ref this.errorFilePath, ref this.datErrorDataCount, ref this.datDataCount);
+                        if (datTable == null && string.IsNullOrEmpty(errorMsg))
+                        {
+                            errorMsg = string.Format("讀取 {0} 時發生錯誤，請確認", datFileName);
+                        }
 
-                    if (!string.IsNullOrEmpty(errorMsg))
-                    {
-                        JobHelper.SaveLog(string.Format("讀取 {0} [失敗]", datFileName), LogState.Error);
-                        return;
-                    }
+                        if (!string.IsNullOrEmpty(errorMsg))
+                        {
+                            JobHelper.SaveLog(string.Format("讀取 {0} [失敗]", datFileName), LogState.Error);
+                            return;
+                        }
 
-                    if (datTable.Rows.Count <= 0)
-                    {
-                        errorMsg = string.Format("{0} 檔沒有資料", datFileName);
-                        JobHelper.SaveLog(string.Format("檔案 {0} 沒有資料", datFileName), LogState.Info);
-                        return;
-                    }
-                    else
-                    {
-                        JobHelper.SaveLog(string.Format("讀取 {0} [成功]", datFileName), LogState.Info);
-                    }
+                        if (datTable.Rows.Count <= 0)
+                        {
+                            errorMsg = string.Format("{0} 檔沒有資料", datFileName);
+                            JobHelper.SaveLog(string.Format("檔案 {0} 沒有資料", datFileName), LogState.Info);
+                            return;
+                        }
+                        else
+                        {
+                            JobHelper.SaveLog(string.Format("讀取 {0} [成功]", datFileName), LogState.Info);
+                        }
 
-                    totalDatDataCount += datTable.Rows.Count;
-                    #endregion
+                        totalDatDataCount += datTable.Rows.Count;
+                        #endregion
+                    }
                 }
-
-                if (fileOKDataCount != totalDatDataCount)
+                if (doCheck)
                 {
-                    errorMsg = ".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同";
-                    JobHelper.SaveLog(".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同", LogState.Error);
-                    return;
+                    if (fileOKDataCount != totalDatDataCount)
+                    {
+                        errorMsg = ".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同";
+                        JobHelper.SaveLog(".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同", LogState.Error);
+                        return;
+                    }
                 }
 
+                bool imported = false;
                 foreach (var fileName in exeFileNames)
                 {
+                    doingFileName = fileName;
                     #region 檢查import_log是否有匯入紀錄, 若無則新增資料
                     JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 開始", LogState.Info);
 
-                    bool insertImportLogStatus = atDailyJob.CheckImportLog(date, fileName, ref errorMsg);
+                    imported = false;
+                    bool insertImportLogStatus = atDailyJob.CheckImportLog_New(date, fileName, ref errorMsg, ref imported);
                     if (!string.IsNullOrEmpty(errorMsg) || !insertImportLogStatus)
                     {
                         JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [失敗]", LogState.Error);
@@ -423,6 +434,9 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     else
                     {
                         JobHelper.SaveLog("檢查Import_Log是否有匯入紀錄, 若無則新增資料 [成功]", LogState.Info);
+                        // 判斷此檔案已匯入過則不做後續動作，避免重複匯入
+                        if (imported)
+                            continue;
                     }
                     #endregion
 
@@ -565,6 +579,19 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                         //無匯入失敗或檢核失敗資料
                         JobHelper.SaveLog(string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", fileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount), LogState.Info);
                     }
+
+                    #region 檢查成功、失敗筆數, 更新table[import_log]
+                    JobHelper.SaveLog("更新table[Import_Log] 開始！", LogState.Info);
+                    bool updateStatus = atDailyJob.UpdateImportLogByFileName(correctDataCount, errorDataCount, this.datErrorDataCount, date, fileName, ref errorMsg);
+                    if (!updateStatus)
+                    {
+                        JobHelper.SaveLog(string.Format("更新 table[Import_Log] [失敗] 檔案：{0}！", fileName), LogState.Error);
+                    }
+                    else
+                    {
+                        JobHelper.SaveLog(string.Format("更新 table[Import_Log] [成功] 檔案：{0}！", fileName), LogState.Info);
+                    }
+                    #endregion
                 }
             }
             // 20221004 調整將資料拆成多個檔案 By Kelton end
@@ -593,24 +620,6 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     JobHelper.SaveLog("更新table[Import_Log] [成功]！", LogState.Info);
                 }
                 #endregion
-            }
-            else
-            {
-                foreach (var datInfo in datInfos)
-                {
-                    #region 檢查成功、失敗筆數, 更新table[import_log]
-                    JobHelper.SaveLog("更新table[Import_Log] 開始！", LogState.Info);
-                    bool updateStatus = atDailyJob.UpdateImportLogByFileName(datInfo.CorrectDataCount, datInfo.ErrorDataCount, datInfo.DatErrorDataCount, date, datInfo.FILE_NAME, ref errorMsg);
-                    if (!updateStatus)
-                    {
-                        JobHelper.SaveLog(string.Format("更新 table[Import_Log] [失敗] 檔案：{0}！", datInfo.FILE_NAME), LogState.Error);
-                    }
-                    else
-                    {
-                        JobHelper.SaveLog(string.Format("更新 table[Import_Log] [成功] 檔案：{0}！", datInfo.FILE_NAME), LogState.Info);
-                    }
-                    #endregion
-                }
             }
             // 20221004 調整將資料拆成多個檔案 By Kelton End
 
@@ -641,7 +650,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                         InsertBatchLog(jobID, "F", string.Format("檔案：{0} 匯入結束，匯入失敗資料共 {1} 筆，檢核失敗資料共 {2} 筆", exeFileName, errorDataCount, this.datErrorDataCount));
                     }
 
-                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {0} 筆，匯入成功 {1} 筆，匯入失敗 {2} 筆，檢核失敗 {3} 筆", this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount);
+                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount);
                     //寄成功信
                     SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
                 }
@@ -662,8 +671,11 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     int totalCorrectDataCount = 0;
                     int totalErrorDataCount = 0;
                     int totalDatErrorDataCount = 0;
+                    string fileNames = string.Empty;
                     foreach (var datInfo in datInfos)
                     {
+                        if (!string.IsNullOrEmpty(fileNames))
+                            fileNames = fileNames + "，";
                         //更新L_BATCH_LOG
                         InsertBatchLog(jobID, "S", string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", datInfo.FILE_NAME, datInfo.DatDataCount, datInfo.CorrectDataCount, datInfo.ErrorDataCount, datInfo.DatErrorDataCount));
 
@@ -676,9 +688,21 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                         totalCorrectDataCount += datInfo.CorrectDataCount;
                         totalErrorDataCount += datInfo.ErrorDataCount;
                         totalDatErrorDataCount += datInfo.DatErrorDataCount;
+                        fileNames = fileNames + datInfo.FILE_NAME;
                     }
 
-                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {0} 筆，匯入成功 {1} 筆，匯入失敗 {2} 筆，檢核失敗 {3} 筆", totalDataCount, totalCorrectDataCount, totalErrorDataCount, totalDatErrorDataCount);
+                    if (!string.IsNullOrEmpty(fileNames))
+                    {
+                        fileNames = string.Format("檔案：{0} 匯入結束，", fileNames);
+                    }
+                    else
+                    {
+                        //更新L_BATCH_LOG
+                        InsertBatchLog(jobID, "S", "沒有檔案需要匯入");
+                    }
+                       
+
+                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：{0}資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", fileNames, totalDataCount, totalCorrectDataCount, totalErrorDataCount, totalDatErrorDataCount);
                     //寄成功信
                     SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
                 }
@@ -687,8 +711,11 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     //更新L_BATCH_LOG
                     InsertBatchLog(JobHelper.strJobID, "F", errorMsg);
 
+                    if (!string.IsNullOrEmpty(doingFileName))
+                        doingFileName = string.Format("，失敗的檔案：{0}，請確認相關資料表是否已匯入順序在此檔案之前的檔案資料。", doingFileName);
+
                     //寄失敗信
-                    SendMail(_MailTitle + "失敗！" + errorMsg, string.Format(" JobOS06_AtDailyJob 批次 發生錯誤：{0}", errorMsg), "失敗", this.StartTime);
+                    SendMail(_MailTitle + "失敗！" + errorMsg, string.Format(" JobOS06_AtDailyJob 批次 發生錯誤：{0}{1}", errorMsg, doingFileName), "失敗", this.StartTime);
                 }
             }
             // 20221004 調整將資料拆成多個檔案 By Kelton End
@@ -754,7 +781,8 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
     /// <param name="unZipPwd">解壓縮密碼</param>
     /// <param name="errorMsg">錯誤訊息</param>
     /// <returns></returns>
-    private List<string> DownloadFiles(string jobID, OS06_AtDailyJob atDailyJob, string date, ref string localPath, ref string unZipPwd, ref string errorMsg, ref int fileOKDataCount)
+    private List<string> DownloadFiles(string jobID, OS06_AtDailyJob atDailyJob, string date, ref string localPath, ref string unZipPwd, ref string errorMsg, ref int fileOKDataCount,
+                                       ref int settingfileCount, ref bool doCheck)
     {
         string folderName = string.Empty;
         string ErrorChi = string.Empty;
@@ -766,7 +794,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
 
             localPath = AppDomain.CurrentDomain.BaseDirectory + "FileDownload\\" + jobID + "\\" + folderName + "\\";
 
-            List<string> fileNames = atDailyJob.DownloadFromFTP_Multiple(date, localPath, "EXE", ref isDownloadOK, ref unZipPwd, ref errorMsg, ref fileOKDataCount);
+            List<string> fileNames = atDailyJob.DownloadFromFTP_Multiple(date, localPath, "EXE", ref isDownloadOK, ref unZipPwd, ref errorMsg, ref fileOKDataCount, ref settingfileCount, ref doCheck);
 
             if (!isDownloadOK && string.IsNullOrEmpty(errorMsg))
             {
