@@ -258,6 +258,7 @@ public class OS06_AtDailyJob
                 bool returnFlag = objFtp.Download(tblFileInfo.Rows[0]["FtpPath"].ToString(), remFileName, localPath, remFileName);
                 if (!returnFlag)
                 {
+                    JobHelper.SaveLog("[FAIL] 檔案: " + remFileName + " FTP 取檔失敗，下載失敗", LogState.Error);
                     errorMsg += "[FAIL] 檔案: " + remFileName + " FTP 取檔失敗，下載失敗";
                     return null;
                 }
