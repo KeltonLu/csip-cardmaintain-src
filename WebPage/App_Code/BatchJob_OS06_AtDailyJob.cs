@@ -650,7 +650,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                         InsertBatchLog(jobID, "F", string.Format("檔案：{0} 匯入結束，匯入失敗資料共 {1} 筆，檢核失敗資料共 {2} 筆", exeFileName, errorDataCount, this.datErrorDataCount));
                     }
 
-                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount);
+                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆，檔案：{0} 匯入結束", exeFileName, this.datDataCount, correctDataCount, errorDataCount, this.datErrorDataCount);
                     //寄成功信
                     SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
                 }
@@ -693,7 +693,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
 
                     if (!string.IsNullOrEmpty(fileNames))
                     {
-                        fileNames = string.Format("檔案：{0} 匯入結束，", fileNames);
+                        fileNames = string.Format("檔案：{0} 匯入結束。", fileNames);
                     }
                     else
                     {
@@ -702,7 +702,7 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                     }
                        
 
-                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：{0}資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", fileNames, totalDataCount, totalCorrectDataCount, totalErrorDataCount, totalDatErrorDataCount);
+                    string resultMsg = string.Format(" JobOS06_AtDailyJob 批次執行成功：資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆，{0}", fileNames, totalDataCount, totalCorrectDataCount, totalErrorDataCount, totalDatErrorDataCount);
                     //寄成功信
                     SendMail(_MailTitle + "成功！" + resultMsg, resultMsg, "成功", this.StartTime);
                 }
