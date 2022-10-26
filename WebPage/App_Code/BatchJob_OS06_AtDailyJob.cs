@@ -411,8 +411,8 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                 {
                     if (fileOKDataCount != totalDatDataCount)
                     {
-                        errorMsg = ".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同";
-                        JobHelper.SaveLog(".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同", LogState.Error);
+                        errorMsg = string.Format(".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同，FILEOK 筆數：{0}，檔案內容總筆數：{1}", fileOKDataCount, totalDatDataCount);
+                        JobHelper.SaveLog(string.Format(".dat 檔案內容資料總筆數與 FILEOK 檔案內容筆數不同，FILEOK 筆數：{0}，檔案內容總筆數：{1}", fileOKDataCount, totalDatDataCount), LogState.Error);
                         return;
                     }
                 }
