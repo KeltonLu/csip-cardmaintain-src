@@ -296,16 +296,16 @@ public class OS06_AtDailyJob
 
                 if (realfileCount != fileCount)
                 {
-                    JobHelper.SaveLog(string.Format("[FAIL] 檔案數量有誤，單一檔案最大筆數：{0}，FILEOK 筆數：{1}，計算應有檔案數：{2}，際實存在檔案數：{3}", fileMaxDataCount, dataCount, fileCount, realfileCount), LogState.Error);
-                    errorMsg += string.Format("[FAIL] 檔案數量有誤，單一檔案最大筆數：{0}，FILEOK 筆數：{1}，計算應有檔案數：{2}，際實存在檔案數：{3}", fileMaxDataCount, dataCount, fileCount, realfileCount);
+                    JobHelper.SaveLog(string.Format("[FAIL] 檔案數量有誤，單一檔案最大筆數：{0}，FILEOK 筆數：{1}，計算應有檔案數：{2}，實際存在檔案數：{3}", fileMaxDataCount, dataCount, fileCount, realfileCount), LogState.Error);
+                    errorMsg += string.Format("[FAIL] 檔案數量有誤，單一檔案最大筆數：{0}，FILEOK 筆數：{1}，計算應有檔案數：{2}，實際存在檔案數：{3}", fileMaxDataCount, dataCount, fileCount, realfileCount);
                     return null;
                 }
 
                 if (settingfileCount < realfileCount)
                 {
                     
-                    JobHelper.SaveLog(string.Format("[FAIL] 實際存在的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數，可收最大檔案數：{0}，際實存在檔案數：{1}", settingfileCount, realfileCount), LogState.Error);
-                    errorMsg += string.Format("[FAIL] 實際存在的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數，可收最大檔案數：{0}，際實存在檔案數：{1}", settingfileCount, realfileCount);
+                    JobHelper.SaveLog(string.Format("[FAIL] 實際存在的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數，可收最大檔案數：{0}，實際存在檔案數：{1}", settingfileCount, realfileCount), LogState.Error);
+                    errorMsg += string.Format("[FAIL] 實際存在的檔案數量大於 M_PROPERTY_CODE 設定的可收最大檔案數，可收最大檔案數：{0}，實際存在檔案數：{1}", settingfileCount, realfileCount);
                     return null;
                 }
 

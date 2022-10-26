@@ -708,11 +708,31 @@ public class BatchJob_OS06_AtDailyJob : Quartz.IJob
                 }
                 else
                 {
+                    string fileNames = string.Empty;
+                    foreach (var datInfo in datInfos)
+                    {
+                        if (!string.IsNullOrEmpty(fileNames))
+                            fileNames = fileNames + "，";
+                        //更新L_BATCH_LOG
+                        InsertBatchLog(jobID, "S", string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", datInfo.FILE_NAME, datInfo.DatDataCount, datInfo.CorrectDataCount, datInfo.ErrorDataCount, datInfo.DatErrorDataCount));
+
+                        //若有匯入失敗或檢核失敗的資料，額外新增一筆L_Batch_Log
+                        if (datInfo.ErrorDataCount > 0 || datInfo.DatErrorDataCount > 0)
+                        {
+                            InsertBatchLog(jobID, "F", string.Format("檔案：{0} 匯入結束，匯入失敗資料共 {1} 筆，檢核失敗資料共 {2} 筆", datInfo.FILE_NAME, datInfo.ErrorDataCount, datInfo.DatErrorDataCount));
+                        }
+
+                        fileNames = fileNames + string.Format("檔案：{0} 匯入結束，資料共 {1} 筆，匯入成功 {2} 筆，匯入失敗 {3} 筆，檢核失敗 {4} 筆", datInfo.FILE_NAME, datInfo.DatDataCount, datInfo.CorrectDataCount, datInfo.ErrorDataCount, datInfo.DatErrorDataCount);
+                    }
+
+                    if (!string.IsNullOrEmpty(fileNames))
+                        fileNames = "，" + fileNames;
+
                     //更新L_BATCH_LOG
                     InsertBatchLog(JobHelper.strJobID, "F", errorMsg);
 
                     if (!string.IsNullOrEmpty(doingFileName))
-                        doingFileName = string.Format("，失敗的檔案：{0}，請確認相關資料表是否已匯入順序在此檔案之前的檔案資料。", doingFileName);
+                        doingFileName = string.Format("{0}，失敗的檔案：{1}，請確認相關資料表是否已匯入順序在此檔案之前的檔案資料。", fileNames, doingFileName);
 
                     //寄失敗信
                     SendMail(_MailTitle + "失敗！" + errorMsg, string.Format(" JobOS06_AtDailyJob 批次 發生錯誤：{0}{1}", errorMsg, doingFileName), "失敗", this.StartTime);
